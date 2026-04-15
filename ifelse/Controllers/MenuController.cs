@@ -51,7 +51,7 @@ namespace ifelse.Controllers
                 existingMenu.Harga = menu.Harga; // update properti harga dengan data baru
                 existingMenu.Kategori = menu.Kategori; // update properti kategori dengan data baru
                 existingMenu.Deskripsi = menu.Deskripsi; // update properti deskripsi dengan data baru
-                existingMenu.isAvaible = menu.isAvaible; // update properti isAvaible dengan data baru
+                existingMenu.IsAvailable = menu.IsAvailable; // update properti isAvailable dengan data baru
                 await _context.SaveChangesAsync(); // simpan perubahan ke database secara asynchronous
                 return RedirectToAction("GetAllMenuAsync"); // setelah berhasil mengupdate, redirect ke aksi Get
             }

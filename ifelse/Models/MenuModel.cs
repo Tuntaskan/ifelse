@@ -15,7 +15,7 @@ namespace ifelse.Models
         public string Kategori { get; set; } = null!;
         public string Deskripsi { get; set; } = string.Empty;
         [Required]
-        public bool isAvaible { get; set; } = true;
+        public bool IsAvailable { get; set; } = true;
 
     }
 }
