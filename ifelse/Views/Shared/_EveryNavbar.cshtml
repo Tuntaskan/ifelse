@@ -1,0 +1,108 @@
+﻿<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar">
+
+    <div class="offcanvas-header justify-content-between">
+        <h4 class="fw-normal text-uppercase fs-6">Menu</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+
+    <div class="offcanvas-body">
+
+        <ul class="navbar-nav justify-content-end menu-list list-unstyled d-flex gap-md-3 mb-0">
+            <li class="nav-item border-dashed active">
+                <a href="#maincourse" class="nav-link d-flex align-items-center gap-3 text-dark p-2">
+                    <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#maincourse"></use></svg>
+                    <span>Main Course</span>
+                </a>
+            </li>
+            <li class="nav-item border-dashed">
+                <a href="#snack" class="nav-link d-flex align-items-center gap-3 text-dark p-2">
+                    <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#snack"></use></svg>
+                    <span>Snack</span>
+                </a>
+            </li>
+            <li class="nav-item border-dashed">
+                <a href="#dessert" class="nav-link d-flex align-items-center gap-3 text-dark p-2">
+                    <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#dessert"></use></svg>
+                    <span>Dessert</span>
+                </a>
+            </li>
+            <li class="nav-item border-dashed">
+                <a href="#drink" class="nav-link d-flex align-items-center gap-3 text-dark p-2">
+                    <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#drink"></use></svg>
+                    <span>Drink</span>
+                </a>
+            </li>
+        </ul>
+
+    </div>
+
+</div>
+
+<header>
+    <div class="container-fluid">
+        <div class="row py-3 border-bottom">
+
+            <div class="col-sm-4 col-lg-2 text-center text-sm-start d-flex gap-3 justify-content-center justify-content-md-start">
+                <div class="d-flex align-items-center my-3 my-sm-0">
+                    <a href="index.html">
+                        <img src="images/logo.svg" alt="logo" class="img-fluid">
+                    </a>
+                </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+                        aria-controls="offcanvasNavbar">
+                    <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#menu"></use></svg>
+                </button>
+            </div>
+
+
+            <div class="col-lg-4">
+                <ul class="navbar-nav list-unstyled d-flex flex-row gap-3 gap-lg-5 justify-content-center flex-wrap align-items-center mb-0 fw-bold text-uppercase text-dark">
+                    <li class="nav-item active">
+                        <a href="index.html" class="nav-link">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle pe-3" role="button" id="pages" data-bs-toggle="dropdown" aria-expanded="false">Pages</a>
+                        <ul class="dropdown-menu border-0 p-3 rounded-0 shadow" aria-labelledby="pages">
+                            <li><a href="index.html" class="dropdown-item">About Us </a></li>
+                            <li><a href="index.html" class="dropdown-item">Shop </a></li>
+                            <li><a href="index.html" class="dropdown-item">Single Product </a></li>
+                            <li><a href="index.html" class="dropdown-item">Cart </a></li>
+                            <li><a href="index.html" class="dropdown-item">Checkout </a></li>
+                            <li><a href="index.html" class="dropdown-item">Blog </a></li>
+                            <li><a href="index.html" class="dropdown-item">Single Post </a></li>
+                            <li><a href="index.html" class="dropdown-item">Styles </a></li>
+                            <li><a href="index.html" class="dropdown-item">Contact </a></li>
+                            <li><a href="index.html" class="dropdown-item">Thank You </a></li>
+                            <li><a href="index.html" class="dropdown-item">My Account </a></li>
+                            <li><a href="index.html" class="dropdown-item">404 Error </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-sm-8 col-lg-2 d-flex gap-5 align-items-center justify-content-center justify-content-sm-end">
+                <ul class="d-flex justify-content-end list-unstyled m-0">
+                    <li>
+                        <a asp-controller="Login" asp-action="Logout" class="btn btn-primary rounded-1">Logout</a>
+                    </li>
+                    <li>
+                        <a class="p-2 mx-1">
+                            <svg width="24" height="24"><use xlink:href="#user"></use></svg>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="p-2 mx-1">
+                            <svg width="24" height="24"><use xlink:href="#wishlist"></use></svg>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="p-2 mx-1" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
+                            <svg width="24" height="24"><use xlink:href="#shopping-bag"></use></svg>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</header>
