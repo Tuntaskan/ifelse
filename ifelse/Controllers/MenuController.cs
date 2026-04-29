@@ -1,73 +1,115 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ifelse.Models;
-using System.Runtime.InteropServices;
 using ifelse.Data;
 
 namespace ifelse.Controllers
 {
     public class MenuController : Controller
     {
-        // -- awal Defenisi variabel untuk menyimpan konteks database --
-        private readonly AppDbContext _context; // buat menyimpan konteks database yang akan digunakan untuk mengakses data menu
-        public MenuController(AppDbContext context) // buat konstruktor untuk menerima konteks database dari dependency injection dan menyimpannya ke variabel _context
+        private readonly AppDbContext _context;
+
+        public MenuController(AppDbContext context)
         {
             _context = context;
         }
-        // -- akhir Defenisi variabel untuk menyimpan konteks database --
 
+        // READ
         public IActionResult Index()
+        {
+            var menus = _context.Menu.ToList();
+            return View(menus);
+        }
+
+        // CREATE GET
+        [HttpGet]
+        public IActionResult Create()
         {
             return View();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllMenuAsync()
-        {
-            var menus = _context.Menu.ToList(); // ambil semua data menu dari database dan simpan ke variabel menus
-            if (menus == null || menus.Count == 0) // cek apakah data menu kosong atau tidak
-            {
-                return NotFound(new { message = "Data menu tidak ditemukan" }); // jika kosong, kembalikan response 404 dengan pesan error
-            }
-            return View(menus); // jika tidak kosong, kembalikan view dengan data menu sebagai model
-        }
+        // CREATE POST
         [HttpPost]
-        public async Task<IActionResult> AddMenuAsync(MenuModel menu) // buat aksi untuk menambahkan menu baru dengan menerima data menu dari form
+        public async Task<IActionResult> Create(MenuModel menu)
         {
-            _context.Menu.Add(menu); // tambahkan data menu baru ke konteks database
-            await _context.SaveChangesAsync(); // simpan perubahan ke database secara asynchronous
-            return RedirectToAction("GetAllMenuAsync"); // setelah berhasil menambahkan, redirect ke aksi Get
+            if (ModelState.IsValid)
+            {
+                _context.Menu.Add(menu);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+
+            return View(menu);
         }
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateMenuAsync(int id, MenuModel menu) // buat aksi untuk mengupdate menu dengan menerima id menu dan data menu baru dari form
+
+        // EDIT GET
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
         {
-            var existingMenu = await _context.Menu.FindAsync(id); // cari data menu yang akan diupdate berdasarkan id
-            if (existingMenu == null) // cek apakah data menu ditemukan atau tidak
+            var menu = await _context.Menu.FindAsync(id);
+
+            if (menu == null)
             {
-                return NotFound(new { message = "Data menu tidak ditemukan" }); // jika tidak ditemukan, kembalikan response 404 dengan pesan error
+                return NotFound();
             }
-            if (ModelState.IsValid) // cek apakah data menu baru valid atau tidak
-            {
-                existingMenu.NamaMenu = menu.NamaMenu; // jika valid, update properti nama menu dengan data baru
-                existingMenu.Harga = menu.Harga; // update properti harga dengan data baru
-                existingMenu.Kategori = menu.Kategori; // update properti kategori dengan data baru
-                existingMenu.Deskripsi = menu.Deskripsi; // update properti deskripsi dengan data baru
-                existingMenu.IsAvailable = menu.IsAvailable; // update properti isAvailable dengan data baru
-                await _context.SaveChangesAsync(); // simpan perubahan ke database secara asynchronous
-                return RedirectToAction("GetAllMenuAsync"); // setelah berhasil mengupdate, redirect ke aksi Get
-            }
-            return View(menu); // jika data menu baru tidak valid, kembalikan view dengan data menu sebagai model
+
+            return View(menu);
         }
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMenuAsync(int id) // buat aksi untuk menghapus menu dengan menerima id menu
+
+        // EDIT POST
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, MenuModel menu)
         {
-            var existingMenu = await _context.Menu.FindAsync(id); // cari data menu yang akan dihapus berdasarkan id
-            if (existingMenu == null) // cek apakah data menu ditemukan atau tidak
+            var existingMenu = await _context.Menu.FindAsync(id);
+
+            if (existingMenu == null)
             {
-                return NotFound(new { message = "Data menu tidak ditemukan" }); // jika tidak ditemukan, kembalikan response 404 dengan pesan error
+                return NotFound();
             }
-            _context.Menu.Remove(existingMenu); // jika ditemukan, hapus data menu dari konteks database
-            await _context.SaveChangesAsync(); // simpan perubahan ke database secara asynchronous
-            return RedirectToAction("GetAllMenuAsync"); // setelah berhasil menghapus, redirect ke aksi Get
+
+            if (ModelState.IsValid)
+            {
+                existingMenu.NamaMenu = menu.NamaMenu;
+                existingMenu.Harga = menu.Harga;
+                existingMenu.Kategori = menu.Kategori;
+                existingMenu.Deskripsi = menu.Deskripsi;
+                existingMenu.IsAvailable = menu.IsAvailable;
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+
+            return View(menu);
+        }
+
+        // DELETE GET
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var menu = await _context.Menu.FindAsync(id);
+
+            if (menu == null)
+            {
+                return NotFound();
+            }
+
+            return View(menu);
+        }
+
+        // DELETE POST
+        [HttpPost]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var menu = await _context.Menu.FindAsync(id);
+
+            if (menu == null)
+            {
+                return NotFound();
+            }
+
+            _context.Menu.Remove(menu);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
         }
     }
 }
