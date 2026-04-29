@@ -2,13 +2,13 @@
 
 namespace ifelse.Controllers
 {
-    public class AdminController : Controller
+    public class KitchenController : Controller
     {
         public IActionResult Index()
         {
             int? roleId = HttpContext.Session.GetInt32("roleId");
 
-            if (roleId != 1)
+            if (roleId != 4)
             {
                 return RedirectToAction("Index", "Login");
             }

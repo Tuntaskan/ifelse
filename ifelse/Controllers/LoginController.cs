@@ -1,15 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ifelse.Models;
-using Microsoft.AspNetCore.Identity;
+using ifelse.Data;
+using System.Linq;
 
 namespace ifelse.Controllers
 {
     public class LoginController : Controller
     {
-        public static List<User> users = new List<User>()
+        private readonly AppDbContext _context;
+
+        public LoginController(AppDbContext context)
         {
-            new User { Username = "admin_ceo", Password = "123" }
-        };
+            _context = context;
+        }
 
         public IActionResult Index()
         {
@@ -19,16 +22,38 @@ namespace ifelse.Controllers
         [HttpPost]
         public IActionResult Index(string username, string password)
         {
-            if (username == "admin_ceo" && password == "123")
+            var user = _context.Users
+                .FirstOrDefault(u =>
+                    u.Username == username &&
+                    u.PasswordHash == password);
+
+            if (user == null)
             {
-                HttpContext.Session.SetString("username", username);
-                HttpContext.Session.SetString("role", "admin");
-                return RedirectToAction("Index", "Admin");
+                ViewBag.Error = "Username atau password salah";
+                return RedirectToAction("Index", "Home");
             }
 
-            ViewBag.Error = "Username atau password salah";
-            return View();
+            HttpContext.Session.SetString("username", user.Username);
+            HttpContext.Session.SetInt32("roleId", user.RoleId);
 
+            switch (user.RoleId)
+            {
+                case 1:
+                    return RedirectToAction("Index", "Admin");
+                case 2:
+                    return RedirectToAction("Index", "Supervisor");
+                case 3:
+                    return RedirectToAction("Index", "Kasir");
+                case 4:
+                    return RedirectToAction("Index", "Kitchen");
+                case 5:
+                    return RedirectToAction("Index", "Owner");
+                case 6:
+                    return RedirectToAction("Index", "Customer");
+                default:
+                    ViewBag.Error = "Role tidak dikenali";
+                    return RedirectToAction("Index", "Home");
+            }
         }
 
         public IActionResult Logout()
@@ -37,28 +62,33 @@ namespace ifelse.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult Register()
-        {
-            return View();
-        }
+        //public IActionResult Register()
+        //{
+        //    return View();
+        //}
 
         [HttpPost]
         public IActionResult Register(string username, string password)
         {
-            if (users.Any(u => u.Username == username))
+            var existingUser = _context.Users
+                .FirstOrDefault(u => u.Username == username);
+
+            if (existingUser != null)
             {
-                ViewBag.Error = "username sudah dipakai";
+                ViewBag.Error = "Username sudah dipakai";
                 return View();
             }
 
-            users.Add(new User
+            var newUser = new User
             {
                 Username = username,
-                Password = password
-            });
+                PasswordHash = password
+            };
 
-            return RedirectToAction("index");
+            _context.Users.Add(newUser);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
         }
     }
 }
-
