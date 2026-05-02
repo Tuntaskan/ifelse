@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ifelse.Models;
 
 namespace ifelse.Data
 {
@@ -10,6 +11,8 @@ namespace ifelse.Data
         }
 
         public DbSet<Models.User> Users { get; set; }
-        public DbSet<Models.MenuModel> Menu { get; set; }
+        public DbSet<Models.MenuModel> Menus { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
     }
 }

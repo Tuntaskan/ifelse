@@ -1,0 +1,48 @@
+﻿@model ifelse.Models.MenuModel
+
+<div class="modal fade" id="createModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <form asp-controller="Menu"
+                  asp-action="Create"
+                  method="post">
+
+                <div class="modal-header">
+                    <h5>Tambah Menu</h5>
+                </div>
+
+                <div class="modal-body">
+
+                    <input asp-for="MenuName"
+                           class="form-control mb-2"
+                           placeholder="Nama Menu" />
+
+                    <select asp-for="CategoryId"
+                            class="form-control mb-2"
+                            asp-items="Html.GetEnumSelectList<ifelse.Models.MenuCategory>()">
+                    </select>
+
+                    <input asp-for="Price"
+                           class="form-control mb-2"
+                           placeholder="Harga" />
+
+                    <div>
+                        <input asp-for="Status" />
+                        Tersedia
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit"
+                            class="btn btn-success">
+                        Simpan
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>

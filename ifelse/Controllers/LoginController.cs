@@ -33,8 +33,20 @@ namespace ifelse.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
+            string roleName = user.RoleId switch
+            {
+                1 => "admin",
+                2 => "supervisor",
+                3 => "kasir",
+                4 => "kitchen",
+                5 => "owner",
+                6 => "customer",
+                _ => "unknown"
+            };
+
             HttpContext.Session.SetString("username", user.Username);
             HttpContext.Session.SetInt32("roleId", user.RoleId);
+            HttpContext.Session.SetString("role", roleName);
 
             switch (user.RoleId)
             {

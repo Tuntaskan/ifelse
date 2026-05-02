@@ -3,19 +3,28 @@ using System.Runtime.CompilerServices;
 
 namespace ifelse.Models
 {
+    public enum MenuCategory
+    {
+        MainCourse,
+        Snack,
+        Dessert,
+        Drink
+    }
     public class MenuModel
     {
         [Key]
-        public int IdMenu { get; set; }
+        public int MenuId { get; set; }
         [Required]
-        public string NamaMenu { get; set; } = null!;
+        public string MenuName { get; set; } = null!;
         [Required]
-        public decimal Harga { get; set; } = decimal.Zero;
+        public MenuCategory CategoryId { get; set; }
         [Required]
-        public string Kategori { get; set; } = null!;
-        public string Deskripsi { get; set; } = string.Empty;
+        public decimal Price { get; set; } = decimal.Zero;
         [Required]
-        public bool IsAvailable { get; set; } = true;
+        public int Stock { get; set; }
+        public string Photo { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public bool Status { get; set; } = true;
 
     }
 }

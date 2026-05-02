@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ifelse.Models;
 using ifelse.Data;
+using ifelse.Models;
+using System.Linq;
 
 namespace ifelse.Controllers
 {
@@ -13,101 +14,96 @@ namespace ifelse.Controllers
             _context = context;
         }
 
+        private bool IsAllowed()
+        {
+            var roleId = HttpContext.Session.GetInt32("roleId");
+
+            return roleId == 1 || roleId == 5;
+        }
+
         // READ
         public IActionResult Index()
         {
-            var menus = _context.Menu.ToList();
+            if (!IsAllowed())
+                return RedirectToAction("Index", "Home");
+
+            var menus = _context.Menus.ToList();
+
             return View(menus);
         }
 
-        // CREATE GET
-        [HttpGet]
+        // CREATE FORM
         public IActionResult Create()
         {
+            if (!IsAllowed())
+                return RedirectToAction("Index", "Home");
+
             return View();
         }
 
-        // CREATE POST
+        // CREATE SAVE
         [HttpPost]
-        public async Task<IActionResult> Create(MenuModel menu)
+        public IActionResult Create(MenuModel menu)
         {
+            if (!IsAllowed())
+                return RedirectToAction("Index", "Home");
+
             if (ModelState.IsValid)
             {
-                _context.Menu.Add(menu);
-                await _context.SaveChangesAsync();
+                _context.Menus.Add(menu);
+                _context.SaveChanges();
+
                 return RedirectToAction("Index");
             }
 
             return View(menu);
         }
 
-        // EDIT GET
-        [HttpGet]
-        public async Task<IActionResult> Edit(int id)
+        // EDIT FORM
+        public IActionResult Edit(int id)
         {
-            var menu = await _context.Menu.FindAsync(id);
+            if (!IsAllowed())
+                return RedirectToAction("Index", "Home");
+
+            var menu = _context.Menus.Find(id);
 
             if (menu == null)
-            {
                 return NotFound();
-            }
 
             return View(menu);
         }
 
-        // EDIT POST
+        // EDIT SAVE
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, MenuModel menu)
+        public IActionResult Edit(MenuModel menu)
         {
-            var existingMenu = await _context.Menu.FindAsync(id);
-
-            if (existingMenu == null)
-            {
-                return NotFound();
-            }
+            if (!IsAllowed())
+                return RedirectToAction("Index", "Home");
 
             if (ModelState.IsValid)
             {
-                existingMenu.NamaMenu = menu.NamaMenu;
-                existingMenu.Harga = menu.Harga;
-                existingMenu.Kategori = menu.Kategori;
-                existingMenu.Deskripsi = menu.Deskripsi;
-                existingMenu.IsAvailable = menu.IsAvailable;
+                _context.Menus.Update(menu);
+                _context.SaveChanges();
 
-                await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
             return View(menu);
         }
 
-        // DELETE GET
-        [HttpGet]
-        public async Task<IActionResult> Delete(int id)
+        // DELETE
+        public IActionResult Delete(int id)
         {
-            var menu = await _context.Menu.FindAsync(id);
+            if (!IsAllowed())
+                return RedirectToAction("Index", "Home");
+
+            var menu = _context.Menus.Find(id);
 
             if (menu == null)
-            {
                 return NotFound();
-            }
 
-            return View(menu);
-        }
-
-        // DELETE POST
-        [HttpPost]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var menu = await _context.Menu.FindAsync(id);
-
-            if (menu == null)
-            {
-                return NotFound();
-            }
-
-            _context.Menu.Remove(menu);
-            await _context.SaveChangesAsync();
+            _context.Menus.Remove(menu);
+            _context.SaveChanges();
 
             return RedirectToAction("Index");
         }

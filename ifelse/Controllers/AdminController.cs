@@ -1,9 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ifelse.Data;
+using ifelse.Models;
+using ifelse.Models;
 
 namespace ifelse.Controllers
 {
     public class AdminController : Controller
     {
+        private readonly AppDbContext _context;
+        public AdminController(AppDbContext context)
+        {
+            _context = context;
+        }
         public IActionResult Index()
         {
             int? roleId = HttpContext.Session.GetInt32("roleId");

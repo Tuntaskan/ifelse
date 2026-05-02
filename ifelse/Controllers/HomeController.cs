@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using ifelse.Data;
 using ifelse.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,16 +8,18 @@ namespace ifelse.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly AppDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(AppDbContext context, ILogger<HomeController> logger)
         {
+            _context = context;
             _logger = logger;
         }
 
         public IActionResult Index()
         {
-           
-            return View();
+            var menus = _context.Menus.ToList(); // ambil dari database
+            return View(menus); // kirim ke view
         }
 
         public IActionResult Privacy()
