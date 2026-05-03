@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text.Json;
 using ifelse.Data;
 using ifelse.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,9 @@ namespace ifelse.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly AppDbContext _context;
 
-        public HomeController(AppDbContext context, ILogger<HomeController> logger)
+        public HomeController(
+            AppDbContext context,
+            ILogger<HomeController> logger)
         {
             _context = context;
             _logger = logger;
@@ -18,8 +21,22 @@ namespace ifelse.Controllers
 
         public IActionResult Index()
         {
-            var menus = _context.Menus.ToList(); // ambil dari database
-            return View(menus); // kirim ke view
+            var vm = new OrderPageViewModel
+            {
+                Menus = _context.Menus.ToList(),
+                Cart = new List<CartItem>()
+            };
+
+            // ambil cart dari session
+            var cartJson =
+                HttpContext.Session.GetString("Cart");
+
+            if (!string.IsNullOrEmpty(cartJson))
+            {
+                vm.Cart = JsonSerializer.Deserialize<List<CartItem>>(cartJson) ?? new List<CartItem>();
+            }
+
+            return View(vm);
         }
 
         public IActionResult Privacy()
@@ -27,10 +44,19 @@ namespace ifelse.Controllers
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        [ResponseCache(
+            Duration = 0,
+            Location = ResponseCacheLocation.None,
+            NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(
+                new ErrorViewModel
+                {
+                    RequestId =
+                        Activity.Current?.Id ??
+                        HttpContext.TraceIdentifier
+                });
         }
     }
 }

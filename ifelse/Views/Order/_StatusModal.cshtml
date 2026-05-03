@@ -1,0 +1,43 @@
+﻿@model ifelse.Models.Order
+
+<div class="modal fade" id="statusModal-@Model.OrderId">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <form asp-action="UpdateStatus" method="post">
+
+                <input type="hidden"
+                       name="id"
+                       value="@Model.OrderId" />
+
+                <div class="modal-header">
+                    <h5>Update Status</h5>
+                </div>
+
+                <div class="modal-body">
+
+                    <select name="status" class="form-control">
+                        <option>Waiting</option>
+                        <option>Cooking</option>
+                        <option>Done</option>
+                    </select>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button class="btn btn-primary">
+                        Update
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>

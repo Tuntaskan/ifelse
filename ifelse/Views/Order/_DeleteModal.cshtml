@@ -1,0 +1,39 @@
+﻿@model ifelse.Models.Order
+
+<div class="modal fade" id="deleteModal-@Model.OrderId">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <form asp-action="Delete" method="post">
+
+                <input type="hidden"
+                       name="id"
+                       value="@Model.OrderId" />
+
+                <div class="modal-header">
+                    <h5>Hapus Order?</h5>
+                </div>
+
+                <div class="modal-body">
+
+                    Order #@Model.OrderId akan dihapus.
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button class="btn btn-danger">
+                        Hapus
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>

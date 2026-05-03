@@ -6,7 +6,8 @@
 
             <form asp-controller="Menu"
                   asp-action="Edit"
-                  method="post">
+                  method="post" 
+                  enctype="multipart/form-data">
 
                 <input asp-for="MenuId" type="hidden" />
 
@@ -15,6 +16,13 @@
                 </div>
 
                 <div class="modal-body">
+
+                    <div class="mb-2">
+                        <label>Ganti Foto</label>
+                        <input asp-for="PhotoFile"
+                               type="file"
+                               class="form-control" />
+                    </div>
 
                     <input asp-for="MenuName"
                            class="form-control mb-2" />
@@ -26,6 +34,14 @@
 
                     <input asp-for="Price"
                            class="form-control mb-2" />
+
+                    <div class="mb-3">
+                        <label>Stock</label>
+
+                        <input asp-for="Stock"
+                               class="form-control"
+                               min="0" />
+                    </div>
 
                     <div>
                         <input asp-for="Status" />

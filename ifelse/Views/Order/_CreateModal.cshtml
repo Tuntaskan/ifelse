@@ -1,0 +1,63 @@
+﻿@{
+    var menus = ViewBag.Menus as List<ifelse.Models.MenuModel>;
+}
+<div class="modal fade" id="createModal">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <form asp-action="Create" method="post">
+
+                <div class="modal-header">
+                    <h5>Transaksi Baru</h5>
+                </div>
+
+                <div class="modal-body">
+
+                    <label>Customer Id</label>
+                    <input name="CustomerId" class="form-control mb-2" />
+
+                    <label>Meja</label>
+                    <input name="TableId" class="form-control mb-2" />
+
+                    <label>Menu</label>
+                    <select name="MenuId" class="form-control mb-2">
+
+                        @if (menus != null)
+                        {
+                            foreach (var menu in menus)
+                            {
+                                <option value="@menu.MenuId">
+                                    @menu.MenuName - @menu.Price
+                                </option>
+                            }
+                        }                        
+                    </select>
+
+                    <label>Total</label>
+                    <input name="TotalPrice" class="form-control mb-2" />
+
+                    <label>Payment</label>
+                    <select name="PaymentStatus" class="form-control">
+                        <option>Paid</option>
+                        <option>Unpaid</option>
+                    </select>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button class="btn btn-success">
+                        Simpan
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>

@@ -48,15 +48,28 @@ namespace ifelse.Controllers
             if (!IsAllowed())
                 return RedirectToAction("Index", "Home");
 
-            if (ModelState.IsValid)
+            if (menu.PhotoFile != null)
             {
-                _context.Menus.Add(menu);
-                _context.SaveChanges();
+                string fileName = Guid.NewGuid().ToString()
+                                  + Path.GetExtension(menu.PhotoFile.FileName);
 
-                return RedirectToAction("Index");
+                string path = Path.Combine(
+                    Directory.GetCurrentDirectory(),
+                    "wwwroot/images",
+                    fileName);
+
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    menu.PhotoFile.CopyTo(stream);
+                }
+
+                menu.Photo = fileName;
             }
 
-            return View(menu);
+            _context.Menus.Add(menu);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
         }
 
         // EDIT FORM
@@ -80,15 +93,37 @@ namespace ifelse.Controllers
             if (!IsAllowed())
                 return RedirectToAction("Index", "Home");
 
-            if (ModelState.IsValid)
-            {
-                _context.Menus.Update(menu);
-                _context.SaveChanges();
+            var existingMenu = _context.Menus.Find(menu.MenuId);
 
-                return RedirectToAction("Index");
+            if (existingMenu == null)
+                return NotFound();
+
+            existingMenu.MenuName = menu.MenuName;
+            existingMenu.CategoryId = menu.CategoryId;
+            existingMenu.Price = menu.Price;
+            existingMenu.Stock = menu.Stock;
+
+            if (menu.PhotoFile != null)
+            {
+                string fileName = Guid.NewGuid().ToString()
+                                  + Path.GetExtension(menu.PhotoFile.FileName);
+
+                string path = Path.Combine(
+                    Directory.GetCurrentDirectory(),
+                    "wwwroot/images",
+                    fileName);
+
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    menu.PhotoFile.CopyTo(stream);
+                }
+
+                existingMenu.Photo = fileName;
             }
 
-            return View(menu);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
         }
 
         // DELETE

@@ -29,7 +29,7 @@ namespace ifelse.Controllers
 
             if (user == null)
             {
-                ViewBag.Error = "Username atau password salah";
+                TempData["LoginError"] = "Username atau password salah";
                 return RedirectToAction("Index", "Home");
             }
 
@@ -61,7 +61,7 @@ namespace ifelse.Controllers
                 case 5:
                     return RedirectToAction("Index", "Owner");
                 case 6:
-                    return RedirectToAction("Index", "Customer");
+                    return RedirectToAction("Index", "Member");
                 default:
                     ViewBag.Error = "Role tidak dikenali";
                     return RedirectToAction("Index", "Home");
@@ -74,33 +74,53 @@ namespace ifelse.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        //public IActionResult Register()
-        //{
-        //    return View();
-        //}
+        public IActionResult Register()
+        {
+            return RedirectToAction("Index");
+        }
 
         [HttpPost]
-        public IActionResult Register(string username, string password)
+        public IActionResult Register(
+            string fullName,
+            string username,
+            string password,
+            string phone,
+            string email)
         {
             var existingUser = _context.Users
                 .FirstOrDefault(u => u.Username == username);
 
             if (existingUser != null)
             {
-                ViewBag.Error = "Username sudah dipakai";
-                return View();
+                TempData["RegisterError"] = "Username sudah dipakai";
+                return RedirectToAction("Index", "Home");
             }
 
             var newUser = new User
             {
+                FullName = fullName,
                 Username = username,
-                PasswordHash = password
+                PasswordHash = password, // nanti bisa di-hash
+                Phone = phone,
+                Email = email,
+
+                // otomatis customer
+                RoleId = 6,
+
+                // otomatis member
+                IsMember = true,
+
+                CreatedAt = DateTime.Now,
+
+                Status = "Active"
             };
 
             _context.Users.Add(newUser);
             _context.SaveChanges();
 
-            return RedirectToAction("Index");
+            TempData["Success"] = "Registrasi berhasil. Silakan login.";
+
+            return RedirectToAction("Index", "Member");
         }
     }
 }

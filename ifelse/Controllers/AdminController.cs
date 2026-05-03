@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ifelse.Data;
 using ifelse.Models;
-using ifelse.Models;
 
 namespace ifelse.Controllers
 {

@@ -1,6 +1,4 @@
-﻿@* Updated: call openLogin(), set type="button", and close the <li> *@
-
-<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar">
+﻿<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar">
 
     <div class="offcanvas-header justify-content-between">
         <h4 class="fw-normal text-uppercase fs-6">Menu</h4>
@@ -29,9 +27,9 @@
                 </a>
             </li>
             <li class="nav-item border-dashed">
-                <a href="#coffee" class="nav-link d-flex align-items-center gap-3 text-dark p-2">
-                    <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#coffee"></use></svg>
-                    <span>Coffee</span>
+                <a href="#drink" class="nav-link d-flex align-items-center gap-3 text-dark p-2">
+                    <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#drink"></use></svg>
+                    <span>drink</span>
                 </a>
             </li>
             <li class="nav-item border-dashed">
@@ -66,24 +64,7 @@
             <div class="col-lg-4">
                 <ul class="navbar-nav list-unstyled d-flex flex-row gap-3 gap-lg-5 justify-content-center flex-wrap align-items-center mb-0 fw-bold text-uppercase text-dark">
                     <li class="nav-item active">
-                        <a href="index.html" class="nav-link">Home</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle pe-3" role="button" id="pages" data-bs-toggle="dropdown" aria-expanded="false">Pages</a>
-                        <ul class="dropdown-menu border-0 p-3 rounded-0 shadow" aria-labelledby="pages">
-                            <li><a href="index.html" class="dropdown-item">About Us </a></li>
-                            <li><a href="index.html" class="dropdown-item">Shop </a></li>
-                            <li><a href="index.html" class="dropdown-item">Single Product </a></li>
-                            <li><a href="index.html" class="dropdown-item">Cart </a></li>
-                            <li><a href="index.html" class="dropdown-item">Checkout </a></li>
-                            <li><a href="index.html" class="dropdown-item">Blog </a></li>
-                            <li><a href="index.html" class="dropdown-item">Single Post </a></li>
-                            <li><a href="index.html" class="dropdown-item">Styles </a></li>
-                            <li><a href="index.html" class="dropdown-item">Contact </a></li>
-                            <li><a href="index.html" class="dropdown-item">Thank You </a></li>
-                            <li><a href="index.html" class="dropdown-item">My Account </a></li>
-                            <li><a href="index.html" class="dropdown-item">404 Error </a></li>
-                        </ul>
+                        <a href="#" class="nav-link">Home</a>
                     </li>
                 </ul>
             </div>
@@ -109,6 +90,14 @@
                             <div class="slides" id="slides" style="display:flex;width:700px;transition:.4s">
 
                                 <div class="slide" style="width:350px;padding:20px;">
+                                    @if (TempData["LoginError"] != null)
+                                    {
+                                        <div class="alert alert-danger mb-3">
+
+                                            @TempData["LoginError"]
+
+                                        </div>
+                                    }
                                     <form method="post" action="/Login">
                                         <label>Username</label>
                                         <input class="form-control mb-3" type="text" name="username">
@@ -121,14 +110,25 @@
                                 </div>
 
                                 <div class="slide" style="width:350px;padding:20px;">
-                                    <form method="post" action="/Register">
+                                    <form method="post" action="/Login/Register">
+
+                                        <label>Nama Lengkap</label>
+                                        <input class="form-control mb-3" type="text" name="fullname" required>
+
                                         <label>Username</label>
-                                        <input class="form-control mb-3" type="text" name="username">
+                                        <input class="form-control mb-3" type="text" name="username" required>
 
                                         <label>Password</label>
-                                        <input class="form-control mb-3" type="password" name="password">
+                                        <input class="form-control mb-3" type="password" name="password" required>
 
-                                        <button class="btn btn-primary rounded-1 w-100">Register</button>
+                                        <label>Nomor HP</label>
+                                        <input class="form-control mb-3" type="text" name="phone" required>
+
+                                        <label>Email</label>
+                                        <input class="form-control mb-3" type="text" name="email" required>
+
+                                        <button class="btn btn-primary rounded-1 w-100">Daftar Member</button>
+
                                     </form>
                                 </div>
 
@@ -155,10 +155,7 @@
         </div>
     </div>
 </header>
-
-
-
-                        <style>
+<style>
                         .tab-header {
                         display: flex;
                         border-bottom: 1px solid #ddd;
@@ -201,14 +198,12 @@
                         transition: transform 0.4s ease;
                         }
 
-                        /* ===== SETIAP SLIDE ===== */
                         .slide {
                         width: 350px;
                         padding: 20px;
                         box-sizing: border-box;
                         }
 
-                        /* ===== INPUT FORM (opsional, biar rapi) ===== */
                         #loginPopup input {
                         width: 100%;
                         padding: 8px;
@@ -221,29 +216,49 @@
                         }
 
                         </style>
-                        <script>
-                            const slides = document.getElementById("slides");
+<script>
+    const slides = document.getElementById("slides");
 
-                            function openLogin() {
-                                document.getElementById("overlay").style.display = "block";
-                                document.getElementById("loginPopup").style.display = "block";
-                                toLogin();
-                            }
+    function openLogin() {
+        document.getElementById("overlay").style.display = "block";
+        document.getElementById("loginPopup").style.display = "block";
+        toLogin();
+    }
 
-                            function closeLogin() {
-                                document.getElementById("overlay").style.display = "none";
-                                document.getElementById("loginPopup").style.display = "none";
-                            }
+    function closeLogin() {
+        document.getElementById("overlay").style.display = "none";
+        document.getElementById("loginPopup").style.display = "none";
+    }
 
-                            function toLogin() {
-                                slides.style.transform = "translateX(0)";
-                                document.getElementById("TabLogin").classList.add("active");
-                                document.getElementById("TabRegister").classList.remove("active");
-                            }
+    function toLogin() {
+        slides.style.transform = "translateX(0)";
+        document.getElementById("TabLogin").classList.add("active");
+        document.getElementById("TabRegister").classList.remove("active");
+    }
 
-                            function toRegister() {
-                                slides.style.transform = "translateX(-350px)";
-                                document.getElementById("TabRegister").classList.add("active");
-                                document.getElementById("TabLogin").classList.remove("active");
-                            }
-                        </script>
+    function toRegister() {
+        slides.style.transform = "translateX(-350px)";
+        document.getElementById("TabRegister").classList.add("active");
+        document.getElementById("TabLogin").classList.remove("active");
+    }
+
+    @if (TempData["LoginError"] != null)
+    {
+            <text>
+                window.onload = function () {
+                    openLogin();
+                };
+            </text>
+    }
+
+        @if (TempData["RegisterError"] != null)
+    {
+            <text>
+                window.onload = function () {
+                    openLogin();
+                    toRegister();
+                };
+            </text>
+    }
+
+</script>

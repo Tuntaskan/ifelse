@@ -1,35 +1,21 @@
-﻿
-@{
+﻿@{
     Layout = "_EveryLayout";
-    ViewData["Title"] = "Owner Page";
+    ViewData["Title"] = "Order Page";
 }
 
-@model List<ifelse.Models.MenuModel>
+@model ifelse.Models.OrderPageViewModel
+@using ifelse.Models
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Organic - Grocery Store HTML Website Template</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="author" content="">
-    <meta name="keywords" content="">
-    <meta name="description" content="">
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="css/vendor.css">
-    <link rel="stylesheet" type="text/css" href="style.css">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Open+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-
 </head>
 <body>
+    
+    @* Main Course: Steak, Biryani Rice, Ramen, Sphagetti *@
+    @* Snack: Dimsum, Tea Mini Brownies, Katsu Sandwich, Nigi-nigi *@
+    @* Dessert: Mcflurry, Chocolate Cake, Taro Pudding, Dessert Cube *@
+    @* Drink: Gentle Breeze, Apple Cider, Sparkleberries Drink, Fruit Mixed *@
 
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
         <defs>
@@ -99,16 +85,635 @@
         <div class="container-lg">
             <div class="row">
                 <div class="col-lg-6 pt-5 mt-5">
-                    <h2 class="display-1 ls-1"><span class="fw-bold text-primary">Planarcafea</span>  <span class="fw-bold">Owner</span></h2>
-                    <p class="fs-4">Welcome Owner.</p>
+                    <h2 class="display-1 ls-1"><span class="fw-bold text-primary">Planarcafea</span>  <span class="fw-bold">Order</span></h2>
+                    <p class="fs-4">Order Page.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <a asp-controller="Menu" asp-action="Index">
-        Kelola Menu
-    </a>
+    <section id="maincourse" class="pb-5">
+        <div class="container-lg">
+
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="section-header d-flex flex-wrap justify-content-between my-4">
+
+                        <h2 class="section-title">Main Course</h2>
+
+                        <div class="d-flex align-items-center">
+                            <a href="#" class="btn btn-primary rounded-1">View All</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5">
+
+                        @foreach (var item in Model.Menus.Where(x => x.CategoryId == MenuCategory.MainCourse))
+                        {
+                            var soldOut = item.Stock <= 0;
+
+                            <div class="col">
+
+                                <div class="product-item border rounded p-3
+                            @(soldOut ? "opacity-50 bg-light" : "")">
+
+                                    <!-- Image -->
+                                    <figure>
+
+                                        @if (!soldOut)
+                                        {
+                                            <a href="#">
+                                                <img src="images/main1.png"
+                                                     class="tab-image">
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <img src="images/main1.png"
+                                                 class="tab-image"
+                                                 style="pointer-events:none;" />
+                                        }
+
+                                    </figure>
+
+                                    <!-- Content -->
+                                    <div class="d-flex flex-column text-center">
+
+                                        <h3 class="fs-6 fw-normal">
+                                            @item.MenuName
+                                        </h3>
+
+                                        <div class="d-flex justify-content-center align-items-center gap-2">
+
+                                            <span class="text-dark fw-semibold">
+                                                Rp @item.Price.ToString("#,##0").Replace(",", ".")
+                                            </span>
+
+                                        </div>
+
+                                        <small class="mb-2">
+                                            Stock: @item.Stock
+                                        </small>
+
+                                        <div class="button-area p-3 pt-0">
+
+                                            @if (!soldOut)
+                                            {
+                                                <form asp-controller="Order"
+                                                      asp-action="AddToCart"
+                                                      method="post">
+
+                                                    <input type="hidden"
+                                                           name="menuId"
+                                                           value="@item.MenuId" />
+
+                                                    <div class="row g-1 mt-2">
+
+                                                        <div class="col-3">
+
+                                                            <input type="number"
+                                                                   name="qty"
+                                                                   class="form-control"
+                                                                   value="1"
+                                                                   min="1" />
+
+                                                        </div>
+
+                                                        <div class="col-7">
+
+                                                            <button type="submit"
+                                                                    class="btn btn-primary rounded-1">
+                                                                Add to Cart
+                                                            </button>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </form>
+                                            }
+                                            else
+                                            {
+                                                <button class="btn btn-secondary w-100"
+                                                        disabled>
+                                                    Stock Habis
+                                                </button>
+                                            }
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="snack" class="pb-5">
+        <div class="container-lg">
+
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="section-header d-flex flex-wrap justify-content-between my-4">
+
+                        <h2 class="section-title">Snack</h2>
+
+                        <div class="d-flex align-items-center">
+                            <a href="#" class="btn btn-primary rounded-1">View All</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5">
+
+                        @foreach (var item in Model.Menus.Where(x => x.CategoryId == MenuCategory.Snack))
+                        {
+                            var soldOut = item.Stock <= 0;
+
+                            <div class="col">
+
+                                <div class="product-item border rounded p-3
+                            @(soldOut ? "opacity-50 bg-light" : "")">
+
+                                    <!-- Image -->
+                                    <figure>
+
+                                        @if (!soldOut)
+                                        {
+                                            <a href="#">
+                                                <img src="images/main1.png"
+                                                     class="tab-image">
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <img src="images/main1.png"
+                                                 class="tab-image"
+                                                 style="pointer-events:none;" />
+                                        }
+
+                                    </figure>
+
+                                    <!-- Content -->
+                                    <div class="d-flex flex-column text-center">
+
+                                        <h3 class="fs-6 fw-normal">
+                                            @item.MenuName
+                                        </h3>
+
+                                        <div class="d-flex justify-content-center align-items-center gap-2">
+
+                                            <span class="text-dark fw-semibold">
+                                                Rp @item.Price.ToString("#,##0").Replace(",", ".")
+                                            </span>
+
+                                        </div>
+
+                                        <small class="mb-2">
+                                            Stock: @item.Stock
+                                        </small>
+
+                                        <div class="button-area p-3 pt-0">
+
+                                            @if (!soldOut)
+                                            {
+                                                <form asp-controller="Order"
+                                                      asp-action="AddToCart"
+                                                      method="post">
+
+                                                    <input type="hidden"
+                                                           name="menuId"
+                                                           value="@item.MenuId" />
+
+                                                    <div class="row g-1 mt-2">
+
+                                                        <div class="col-3">
+
+                                                            <input type="number"
+                                                                   name="qty"
+                                                                   class="form-control"
+                                                                   value="1"
+                                                                   min="1" />
+
+                                                        </div>
+
+                                                        <div class="col-7">
+
+                                                            <button type="submit"
+                                                                    class="btn btn-primary rounded-1">
+                                                                Add to Cart
+                                                            </button>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </form>
+                                            }
+                                            else
+                                            {
+                                                <button class="btn btn-secondary w-100"
+                                                        disabled>
+                                                    Stock Habis
+                                                </button>
+                                            }
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="dessert" class="products-carousel">
+        <div class="container-lg overflow-hidden py-5">
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="section-header d-flex flex-wrap justify-content-between my-4">
+
+                        <h2 class="section-title">Dessert</h2>
+
+                        <div class="d-flex align-items-center">
+                            <a href="#" class="btn btn-primary me-2">View All</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5">
+
+                        @foreach (var item in Model.Menus.Where(x => x.CategoryId == MenuCategory.Dessert))
+                        {
+                            var soldOut = item.Stock <= 0;
+
+                            <div class="col">
+
+                                <div class="product-item border rounded p-3
+                            @(soldOut ? "opacity-50 bg-light" : "")">
+
+                                    <!-- Image -->
+                                    <figure>
+
+                                        @if (!soldOut)
+                                        {
+                                            <a href="#">
+                                                <img src="images/main1.png"
+                                                     class="tab-image">
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <img src="images/main1.png"
+                                                 class="tab-image"
+                                                 style="pointer-events:none;" />
+                                        }
+
+                                    </figure>
+
+                                    <!-- Content -->
+                                    <div class="d-flex flex-column text-center">
+
+                                        <h3 class="fs-6 fw-normal">
+                                            @item.MenuName
+                                        </h3>
+
+                                        <div class="d-flex justify-content-center align-items-center gap-2">
+
+                                            <span class="text-dark fw-semibold">
+                                                Rp @item.Price.ToString("#,##0").Replace(",", ".")
+                                            </span>
+
+                                        </div>
+
+                                        <small class="mb-2">
+                                            Stock: @item.Stock
+                                        </small>
+
+                                        <div class="button-area p-3 pt-0">
+
+                                            @if (!soldOut)
+                                            {
+                                                <form asp-controller="Order"
+                                                      asp-action="AddToCart"
+                                                      method="post">
+
+                                                    <input type="hidden"
+                                                           name="menuId"
+                                                           value="@item.MenuId" />
+
+                                                    <div class="row g-1 mt-2">
+
+                                                        <div class="col-3">
+
+                                                            <input type="number"
+                                                                   name="qty"
+                                                                   class="form-control"
+                                                                   value="1"
+                                                                   min="1" />
+
+                                                        </div>
+
+                                                        <div class="col-7">
+
+                                                            <button type="submit"
+                                                                    class="btn btn-primary rounded-1">
+                                                                Add to Cart
+                                                            </button>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </form>
+                                            }
+                                            else
+                                            {
+                                                <button class="btn btn-secondary w-100"
+                                                        disabled>
+                                                    Stock Habis
+                                                </button>
+                                            }
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="Drink" class="products-carousel">
+        <div class="container-lg overflow-hidden pb-5">
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="section-header d-flex justify-content-between my-4">
+
+                        <h2 class="section-title">Drink</h2>
+
+                        <div class="d-flex align-items-center">
+                            <a href="#" class="btn btn-primary me-2">View All</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5">
+
+                        @foreach (var item in Model.Menus.Where(x => x.CategoryId == MenuCategory.Drink))
+                        {
+                            var soldOut = item.Stock <= 0;
+
+                            <div class="col">
+
+                                <div class="product-item border rounded p-3
+                            @(soldOut ? "opacity-50 bg-light" : "")">
+
+                                    <!-- Image -->
+                                    <figure>
+
+                                        @if (!soldOut)
+                                        {
+                                            <a href="#">
+                                                <img src="images/main1.png"
+                                                     class="tab-image">
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <img src="images/main1.png"
+                                                 class="tab-image"
+                                                 style="pointer-events:none;" />
+                                        }
+
+                                    </figure>
+
+                                    <!-- Content -->
+                                    <div class="d-flex flex-column text-center">
+
+                                        <h3 class="fs-6 fw-normal">
+                                            @item.MenuName
+                                        </h3>
+
+                                        <div class="d-flex justify-content-center align-items-center gap-2">
+
+                                            <span class="text-dark fw-semibold">
+                                                Rp @item.Price.ToString("#,##0").Replace(",", ".")
+                                            </span>
+
+                                        </div>
+
+                                        <small class="mb-2">
+                                            Stock: @item.Stock
+                                        </small>
+
+                                        <div class="button-area p-3 pt-0">
+
+                                            @if (!soldOut)
+                                            {
+                                                <form asp-controller="Order"
+                                                      asp-action="AddToCart"
+                                                      method="post">
+
+                                                    <input type="hidden"
+                                                           name="menuId"
+                                                           value="@item.MenuId" />
+
+                                                    <div class="row g-1 mt-2">
+
+                                                        <div class="col-3">
+
+                                                            <input type="number"
+                                                                   name="qty"
+                                                                   class="form-control"
+                                                                   value="1"
+                                                                   min="1" />
+
+                                                        </div>
+
+                                                        <div class="col-7">
+
+                                                            <button type="submit"
+                                                                    class="btn btn-primary rounded-1">
+                                                                Add to Cart
+                                                            </button>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </form>
+                                            }
+                                            else
+                                            {
+                                                <button class="btn btn-secondary w-100"
+                                                        disabled>
+                                                    Stock Habis
+                                                </button>
+                                            }
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="card p-3 mt-5">
+
+        <h4>Cart</h4>
+
+        @if (Model.Cart.Any())
+        {
+            foreach (var item in Model.Cart)
+            {
+                <p>
+                    @item.MenuName
+                    x @item.Qty
+                    =
+                    @item.Subtotal
+                </p>
+            }
+
+            <form asp-action="Checkout"
+                  method="post">
+
+                <input name="customerId"
+                       placeholder="Customer Id"
+                       class="form-control mb-2" />
+
+                <input name="tableId"
+                       placeholder="Table Number"
+                       class="form-control mb-2" />
+
+                <button class="button-area p-3 pt-0">
+                    Checkout
+                </button>
+
+            </form>
+        }
+        else
+        {
+            <p>Cart kosong</p>
+        }
+
+    </div>
+
+    <div class="container mt-4">
+
+        <h2>Transaksi Kasir</h2>
+
+        @* <button class="btn btn-primary mb-3"
+                data-bs-toggle="modal"
+                data-bs-target="#createModal">
+            + Transaksi Baru
+        </button> *@
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Order</th>
+                    <th>Meja</th>
+                    <th>Total</th>
+                    <th>Payment</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model.Orders)
+                {
+                    <tr>
+                        <td>@item.OrderId</td>
+                        <td>@item.TableId</td>
+                        <td>@item.TotalPrice</td>
+                        <td>@item.PaymentStatus</td>
+                        <td>@item.OrderStatus</td>
+
+                        <td>
+
+                            <button class="btn btn-warning btn-sm"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#statusModal-@item.OrderId">
+                                Update
+                            </button>
+
+                            <button class="btn btn-danger btn-sm"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#deleteModal-@item.OrderId">
+                                Delete
+                            </button>
+
+                        </td>
+                    </tr>
+
+                    <partial name="_StatusModal" model="item" />
+                    <partial name="_DeleteModal" model="item" />
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+    <partial name="_CreateModal" />
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
     <script src="js/jquery-1.11.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>

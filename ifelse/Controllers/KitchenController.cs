@@ -1,20 +1,44 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ifelse.Data;
 
 namespace ifelse.Controllers
 {
     public class KitchenController : Controller
     {
+        private readonly AppDbContext _context;
+
+        public KitchenController(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        // Pesanan masuk ke dapur
         public IActionResult Index()
         {
-            int? roleId = HttpContext.Session.GetInt32("roleId");
+            var orders = _context.Orders
+                .Where(x => x.OrderStatus != "Done")
+                .ToList();
 
-            if (roleId != 4)
+            return View(orders);
+        }
+
+        // Update status masak
+        public IActionResult UpdateStatus(
+            int id,
+            string status)
+        {
+            var order = _context.Orders
+                .FirstOrDefault(x => x.OrderId == id);
+
+            if (order != null)
             {
-                return RedirectToAction("Index", "Login");
+                order.OrderStatus = status;
+
+                _context.SaveChanges();
             }
 
-            ViewBag.Username = HttpContext.Session.GetString("username");
-            return View();
+            return RedirectToAction("Index");
         }
     }
 }
