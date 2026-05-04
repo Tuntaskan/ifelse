@@ -44,6 +44,7 @@ namespace ifelse.Controllers
                 _ => "unknown"
             };
 
+            HttpContext.Session.SetString("fullname", user.FullName);
             HttpContext.Session.SetString("username", user.Username);
             HttpContext.Session.SetInt32("roleId", user.RoleId);
             HttpContext.Session.SetString("role", roleName);

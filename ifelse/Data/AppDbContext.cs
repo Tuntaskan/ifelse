@@ -14,5 +14,6 @@ namespace ifelse.Data
         public DbSet<Models.MenuModel> Menus { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<TableMeja> TablesMeja { get; set; }
     }
 }

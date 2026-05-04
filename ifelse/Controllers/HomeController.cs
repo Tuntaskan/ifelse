@@ -34,6 +34,7 @@ namespace ifelse.Controllers
             if (!string.IsNullOrEmpty(cartJson))
             {
                 vm.Cart = JsonSerializer.Deserialize<List<CartItem>>(cartJson) ?? new List<CartItem>();
+                vm.LastOrderId = HttpContext.Session.GetInt32("LastOrderId");
             }
 
             return View(vm);

@@ -31,6 +31,10 @@ namespace ifelse.Controllers
             vm.Menus = await _context.Menus
                 .ToListAsync();
 
+            vm.Tables = await _context.TablesMeja
+                .OrderBy(x => x.TableNumber)
+                .ToListAsync();
+
             // ambil cart dari session
             var cartJson =
                 HttpContext.Session.GetString("Cart");
@@ -43,7 +47,6 @@ namespace ifelse.Controllers
             return View(vm);
         }
 
-        [HttpPost]
         [HttpPost]
         public async Task<IActionResult> AddToCart(
             int menuId,
@@ -91,6 +94,8 @@ namespace ifelse.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Checkout(
+            string customerName,
+            string? customerRequest,
             int? tableId)
         {
             var roleId = HttpContext.Session.GetInt32("roleId");
@@ -136,16 +141,17 @@ namespace ifelse.Controllers
             var order = new Order
             {
                 CustomerId = user.UserId,
+                CustomerName =
+                roleId == 6
+                    ? user.FullName
+                    : customerName,
+                CustomerRequest = customerRequest,
                 TableId = tableId == 0 ? null : tableId,
-
                 OrderDate = DateTime.Now,
-
                 // nanti kasir yang handle
                 PaymentStatus = "Pending",
-
                 // kasir akan lihat ini
                 OrderStatus = "Waiting",
-
                 TotalPrice = totalPrice
             };
 
@@ -153,24 +159,64 @@ namespace ifelse.Controllers
 
             await _context.SaveChangesAsync();
 
+            if (tableId != null)
+            {
+                var selectedTable =
+                    await _context.TablesMeja
+                        .FindAsync(tableId);
+
+                if (selectedTable != null)
+                {
+                    selectedTable.Status = "Booked";
+                }
+            }
+
             foreach (var item in cart)
             {
+                var menu = await _context.Menus
+                    .FindAsync(item.MenuId);
+
+                if (menu != null)
+                {
+                    menu.Stock -= item.Qty;
+
+                    if (menu.Stock < 0)
+                    {
+                        menu.Stock = 0;
+                    }
+                }
+
                 _context.OrderDetails.Add(
                     new OrderDetail
                     {
                         OrderId = order.OrderId,
                         MenuId = item.MenuId,
                         Qty = item.Qty,
+                        Price = item.Price,
                         Subtotal = item.Subtotal
                     });
             }
 
             await _context.SaveChangesAsync();
 
+            HttpContext.Session.SetInt32("LastOrderId", order.OrderId);
             // kosongkan cart
             HttpContext.Session.Remove("Cart");
 
-            return Redirect(Request.Headers["Referer"].ToString());
+            return RedirectToAction("Receipt", new { id = order.OrderId });
         }
+
+        public async Task<IActionResult> Receipt(int id)
+        {
+            var order = await _context.Orders
+                .Include(x => x.OrderDetails)
+                .FirstOrDefaultAsync(x => x.OrderId == id);
+
+            if (order == null)
+                return NotFound();
+
+            return View(order);
+        }
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting;
 using ifelse.Data;
 using ifelse.Models;
 using System.Linq;
@@ -8,10 +9,49 @@ namespace ifelse.Controllers
     public class MenuController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IWebHostEnvironment _environment;
+        private static readonly string[] AllowedPhotoExtensions = [".jpg", ".jpeg", ".png", ".gif", ".webp"];
 
-        public MenuController(AppDbContext context)
+        public MenuController(AppDbContext context, IWebHostEnvironment environment)
         {
             _context = context;
+            _environment = environment;
+        }
+
+        private bool TrySavePhoto(IFormFile? photoFile, out string? fileName, out string? errorMessage)
+        {
+            fileName = null;
+            errorMessage = null;
+
+            if (photoFile == null || photoFile.Length == 0)
+                return true;
+
+            var extension = Path.GetExtension(photoFile.FileName);
+
+            if (string.IsNullOrWhiteSpace(extension) || !AllowedPhotoExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase))
+            {
+                errorMessage = "Format foto tidak didukung. Gunakan JPG, PNG, GIF, atau WEBP.";
+                return false;
+            }
+
+            try
+            {
+                var imagesPath = Path.Combine(_environment.WebRootPath, "images");
+                Directory.CreateDirectory(imagesPath);
+
+                fileName = $"{Guid.NewGuid()}{extension}";
+                var path = Path.Combine(imagesPath, fileName);
+
+                using var stream = new FileStream(path, FileMode.Create);
+                photoFile.CopyTo(stream);
+
+                return true;
+            }
+            catch
+            {
+                errorMessage = "Foto gagal diupload. Coba ulangi dengan file lain.";
+                return false;
+            }
         }
 
         private bool IsAllowed()
@@ -48,23 +88,13 @@ namespace ifelse.Controllers
             if (!IsAllowed())
                 return RedirectToAction("Index", "Home");
 
-            if (menu.PhotoFile != null)
+            if (!TrySavePhoto(menu.PhotoFile, out var fileName, out var errorMessage))
             {
-                string fileName = Guid.NewGuid().ToString()
-                                  + Path.GetExtension(menu.PhotoFile.FileName);
-
-                string path = Path.Combine(
-                    Directory.GetCurrentDirectory(),
-                    "wwwroot/images",
-                    fileName);
-
-                using (var stream = new FileStream(path, FileMode.Create))
-                {
-                    menu.PhotoFile.CopyTo(stream);
-                }
-
-                menu.Photo = fileName;
+                TempData["MenuError"] = errorMessage;
+                return RedirectToAction("Index");
             }
+
+            menu.Photo = fileName;
 
             _context.Menus.Add(menu);
             _context.SaveChanges();
@@ -103,23 +133,14 @@ namespace ifelse.Controllers
             existingMenu.Price = menu.Price;
             existingMenu.Stock = menu.Stock;
 
-            if (menu.PhotoFile != null)
+            if (!TrySavePhoto(menu.PhotoFile, out var fileName, out var errorMessage))
             {
-                string fileName = Guid.NewGuid().ToString()
-                                  + Path.GetExtension(menu.PhotoFile.FileName);
-
-                string path = Path.Combine(
-                    Directory.GetCurrentDirectory(),
-                    "wwwroot/images",
-                    fileName);
-
-                using (var stream = new FileStream(path, FileMode.Create))
-                {
-                    menu.PhotoFile.CopyTo(stream);
-                }
-
-                existingMenu.Photo = fileName;
+                TempData["MenuError"] = errorMessage;
+                return RedirectToAction("Index");
             }
+
+            if (!string.IsNullOrEmpty(fileName))
+                existingMenu.Photo = fileName;
 
             _context.SaveChanges();
 

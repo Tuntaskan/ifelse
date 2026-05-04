@@ -150,6 +150,24 @@
 
     @await Html.PartialAsync("_UserOrder", Model)
     
+    @if (TempData["ShowReceipt"] != null)
+    {
+        <script>
+            openReceipt();
+        </script>
+    }
+
+    <script>
+        function openReceipt() {
+            document.getElementById("receiptPopup").style.display = "block";
+            document.getElementById("overlay").style.display = "block";
+        }
+
+        function closeReceipt() {
+            document.getElementById("receiptPopup").style.display = "none";
+            document.getElementById("overlay").style.display = "none";
+        }
+    </script>
 
     <section class="py-5">
         <div class="container-lg">
