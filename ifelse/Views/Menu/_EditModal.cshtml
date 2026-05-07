@@ -10,7 +10,7 @@
                   enctype="multipart/form-data">
 
                 <input asp-for="MenuId" type="hidden" />
-
+                <input asp-for="Photo" type="hidden" />
                 <div class="modal-header">
                     <h5>Edit Menu</h5>
                 </div>
@@ -18,41 +18,46 @@
                 <div class="modal-body">
 
                     <div class="mb-2">
-                        <label>Ganti Foto</label>
+                        <label>Change Photo</label>
                         <input asp-for="PhotoFile"
                                type="file"
-                               class="form-control" />
+                               class="form-control" 
+                               style="border: 1px solid black; border-radius: 10px;" />
+                        @if (!string.IsNullOrWhiteSpace(Model.Photo))
+                        {
+                            <small class="text-muted d-block mt-1">Current photo: @Model.Photo</small>
+                        }
                     </div>
 
                     <input asp-for="MenuName"
-                           class="form-control mb-2" />
+                           class="form-control mb-2" 
+                           style="border: 1px solid black; border-radius: 10px;" />
 
                     <select asp-for="CategoryId"
                             class="form-control mb-2"
+                            style="border: 1px solid black; border-radius: 10px;"
                             asp-items="Html.GetEnumSelectList<ifelse.Models.MenuCategory>()">
                     </select>
 
                     <input asp-for="Price"
-                           class="form-control mb-2" />
+                           class="form-control mb-2" 
+                           style="border: 1px solid black; border-radius: 10px;" />
 
                     <div class="mb-3">
                         <label>Stock</label>
 
                         <input asp-for="Stock"
                                class="form-control"
-                               min="0" />
-                    </div>
-
-                    <div>
-                        <input asp-for="Status" />
-                        Tersedia
+                               min="0" 
+                               style="border: 1px solid black; border-radius: 10px;" />
                     </div>
 
                 </div>
 
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit"
-                            class="btn btn-warning">
+                            class="btn btn-primary">
                         Update
                     </button>
                 </div>

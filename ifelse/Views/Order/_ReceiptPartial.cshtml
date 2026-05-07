@@ -1,0 +1,135 @@
+﻿@model ifelse.Models.Order
+
+<div class="modal-header">
+    <h5 class="modal-title">
+        Receipt #@Model.OrderId
+    </h5>
+
+    <button type="button"
+            class="btn-close"
+            data-bs-dismiss="modal">
+    </button>
+</div>
+
+
+<div class="modal-body">
+
+    <div id="printReceipt" class="receipt-paper">
+
+        <div class="receipt-header">
+
+            <h5>PLANARCAFEA</h5>
+
+            <small>
+                Cafe Management System
+            </small>
+
+            <hr />
+
+        </div>
+
+
+        <div class="receipt-info">
+
+            <div>
+                Order:
+                #@Model.OrderId
+            </div>
+
+            <div>
+                Customer:
+                @Model.CustomerName
+            </div>
+
+            <div>
+                Date:
+                @Model.OrderDate.ToString("dd/MM/yyyy HH:mm")
+            </div>
+
+            <div>
+                Table:
+                @(Model.TableId?.ToString() ?? "-")
+            </div>
+
+            <div>
+                Payment:
+                @Model.PaymentStatus
+            </div>
+
+            <div>
+                Status:
+                @Model.OrderStatus
+            </div>
+
+        </div>
+
+        <hr />
+
+        @foreach (var item in Model.OrderDetails)
+        {
+            <div class="receipt-item">
+
+                <div>
+                    @(item.Menu?.MenuName ?? $"Menu #{item.MenuId}")
+                </div>
+
+                <div>
+                    @item.Qty x
+                    Rp @item.Price.ToString("#,##0").Replace(",", ".")
+                </div>
+
+                <div>
+                    Rp @item.Subtotal.ToString("#,##0").Replace(",", ".")
+                </div>
+
+            </div>
+        }
+
+        <hr />
+
+        <div class="receipt-total">
+
+            <span>TOTAL</span>
+
+            <span>
+                Rp @Model.TotalPrice.ToString("#,##0").Replace(",", ".")
+            </span>
+
+        </div>
+
+        <hr />
+
+        <div class="receipt-footer">
+
+            Thank You 🙏
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="modal-footer">
+
+    <button type="button"
+            onclick="printReceipt()"
+            class="btn btn-success">
+
+        Print
+
+    </button>
+
+    <button type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal">
+
+        Close
+
+    </button>
+
+</div>
+
+
+
+

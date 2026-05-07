@@ -1,0 +1,55 @@
+﻿
+@{
+}
+@model List<ifelse.Models.User>
+
+<table class="table table-bordered">
+
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @foreach(var item in Model)
+        {
+            <tr>
+
+                <td>@item.FullName</td>
+                <td>@item.Username</td>
+                <td>@item.RoleId</td>
+                <td>@item.Status</td>
+
+                <td>
+
+                    <button class="btn btn-warning btn-sm editBtn"
+                            data-id="@item.UserId">
+                        Edit
+                    </button>
+
+                    <button class="btn btn-danger btn-sm deleteBtn"
+                            data-id="@item.UserId">
+                        Delete
+                    </button>
+
+                </td>
+
+            </tr>
+        }
+
+    </tbody>
+
+</table>
+
+<div class="modal fade" id="modalBox">
+    <div class="modal-dialog">
+        <div class="modal-content" id="modalContent">
+        </div>
+    </div>
+</div>

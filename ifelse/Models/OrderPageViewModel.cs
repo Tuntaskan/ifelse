@@ -5,6 +5,7 @@ namespace ifelse.Models
     public class OrderPageViewModel
     {
         public int? LastOrderId { get; set; }
+        public Order? LastOrder { get; set; }
         public List<Order> Orders { get; set; } = new();
 
         public List<MenuModel> Menus { get; set; } = new List<MenuModel>();

@@ -6,62 +6,28 @@
     </div>
 
     <div class="offcanvas-body">
-
-        <ul class="navbar-nav justify-content-end menu-list list-unstyled d-flex gap-md-3 mb-0">
-            <li class="nav-item border-dashed active">
-                <a href="#maincourse" class="nav-link d-flex align-items-center gap-3 text-dark p-2">
-                    <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#maincourse"></use></svg>
-                    <span>Main Course</span>
-                </a>
-            </li>
-            <li class="nav-item border-dashed">
-                <a href="#snack" class="nav-link d-flex align-items-center gap-3 text-dark p-2">
-                    <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#snack"></use></svg>
-                    <span>Snack</span>
-                </a>
-            </li>
-            <li class="nav-item border-dashed">
-                <a href="#dessert" class="nav-link d-flex align-items-center gap-3 text-dark p-2">
-                    <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#dessert"></use></svg>
-                    <span>Dessert</span>
-                </a>
-            </li>
-            <li class="nav-item border-dashed">
-                <a href="#drink" class="nav-link d-flex align-items-center gap-3 text-dark p-2">
-                    <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#drink"></use></svg>
-                    <span>drink</span>
-                </a>
-            </li>
-            <li class="nav-item border-dashed">
-                <a href="noncoffee" class="nav-link d-flex align-items-center gap-3 text-dark p-2">
-                    <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#noncoffee"></use></svg>
-                    <span>Non Coffee</span>
-                </a>
-            </li>
-        </ul>
-
     </div>
 
 </div>
 
-<header>
+<header class="custom-navbar border-bottom shadow-sm">
     <div class="container-fluid">
         <div class="row py-3 border-bottom">
 
             <div class="col-sm-4 col-lg-2 text-center text-sm-start d-flex gap-3 justify-content-center justify-content-md-start">
                 <div class="d-flex align-items-center my-3 my-sm-0">
                     <a>
-                        <img src="images/logo.svg" alt="logo" class="img-fluid">
+                        <img src="images/planarcafea!.png" alt="logo" class="img-fluid">
                     </a>
                 </div>
-                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+                @* <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
                         aria-controls="offcanvasNavbar">
                     <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#menu"></use></svg>
-                </button>
+                </button> *@
             </div>
 
 
-            <div class="col-lg-4">
+            <div class="col-lg-4 col-lg-2 d-flex gap-5 align-items-center justify-content-center justify-content-sm-end">
                 <ul class="navbar-nav list-unstyled d-flex flex-row gap-3 gap-lg-5 justify-content-center flex-wrap align-items-center mb-0 fw-bold text-uppercase text-dark">
                     <li class="nav-item active">
                         <a href="#" class="nav-link">Home</a>
@@ -72,7 +38,7 @@
             <div class="col-sm-8 col-lg-2 d-flex gap-5 align-items-center justify-content-center justify-content-sm-end">
                 <ul class="d-flex justify-content-end list-unstyled m-0">
                     <li>
-                        <button type="button" class="btn btn-primary rounded-1" onclick="openLogin()">Login</button>
+                        <button type="button" class="btn btn-primary rounded-1" onclick="openLogin()">Login/Register</button>
 
                         <div id="overlay" onclick="closeLogin()"
                              style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:999;"></div>
@@ -102,8 +68,20 @@
                                         <label>Username</label>
                                         <input class="form-control mb-3" type="text" name="username">
 
-                                        <label>Password</label>
-                                        <input class="form-control mb-3" type="password" name="password">
+                                        <div class="mb-3 position-relative">
+                                            <label>Password</label>
+
+                                            <input id="passwordBox1"
+                                                   class="form-control pe-5"
+                                                   type="password"
+                                                   name="password">
+
+                                            <button type="button"
+                                                    class="btn btn-outline-secondary"
+                                                    onclick="togglePassword1()">
+                                                Show
+                                            </button>
+                                        </div>
 
                                         <button class="btn btn-primary rounded-1 w-100">Login</button>
                                     </form>
@@ -112,22 +90,34 @@
                                 <div class="slide" style="width:350px;padding:20px;">
                                     <form method="post" action="/Login/Register">
 
-                                        <label>Nama Lengkap</label>
+                                        <label>Fullname</label>
                                         <input class="form-control mb-3" type="text" name="fullname" required>
 
                                         <label>Username</label>
                                         <input class="form-control mb-3" type="text" name="username" required>
 
                                         <label>Password</label>
-                                        <input class="form-control mb-3" type="password" name="password" required>
+                                        <div class="position-relative mb-3">
+                                            <input id="passwordBox2"
+                                                   class="form-control pe-5"
+                                                   type="password"
+                                                   name="password"
+                                                   required>
 
-                                        <label>Nomor HP</label>
+                                            <button type="button"
+                                                    class="btn btn-outline-secondary"
+                                                    onclick="togglePassword2()">
+                                                Show
+                                            </button>
+                                        </div>
+
+                                        <label>Phone Number</label>
                                         <input class="form-control mb-3" type="text" name="phone" required>
 
                                         <label>Email</label>
                                         <input class="form-control mb-3" type="text" name="email" required>
 
-                                        <button class="btn btn-primary rounded-1 w-100">Daftar Member</button>
+                                        <button class="btn btn-primary rounded-1 w-100">Register Member</button>
 
                                     </form>
                                 </div>
@@ -135,26 +125,152 @@
                             </div>
                         </div>
                     </li>
-                    <li>
-                        <a class="p-2 mx-1">
-                            <svg width="24" height="24"><use xlink:href="#user"></use></svg>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="p-2 mx-1">
-                            <svg width="24" height="24"><use xlink:href="#wishlist"></use></svg>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="p-2 mx-1" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
-                            <svg width="24" height="24"><use xlink:href="#shopping-bag"></use></svg>
-                        </a>
-                    </li>
                 </ul>
             </div>
         </div>
     </div>
 </header>
+<style>
+    .tab-header {
+        display: flex;
+        border-bottom: 1px solid #ddd;
+        background: #f9f9f9;
+    }
+
+    .tab {
+        flex: 1;
+        text-align: center;
+        padding: 12px 0;
+        cursor: pointer;
+        font-weight: bold;
+        color: #666;
+        transition: 0.3s;
+        position: relative;
+    }
+
+        .tab:hover {
+            color: #27714E;
+        }
+
+        .tab.active {
+            color: #27714E;
+        }
+
+            .tab.active::after {
+                content: "";
+                position: absolute;
+                bottom: 0;
+                left: 20%;
+                width: 60%;
+                height: 3px;
+                background: #27714E;
+                border-radius: 2px;
+            }
+
+    .slides {
+        display: flex;
+        width: 700px;
+        transition: transform 0.4s ease;
+    }
+
+    .slide {
+        width: 350px;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    #loginPopup input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    #loginPopup button {
+        border-radius: 4px;
+    }
+
+</style>
+<script>
+    const slides = document.getElementById("slides");
+
+    function togglePassword1() {
+
+        let x = document.getElementById("passwordBox1");
+
+        if (x.type === "password")
+            x.type = "text";
+        else
+            x.type = "password";
+    }
+
+    function togglePassword2() {
+
+        let x = document.getElementById("passwordBox2");
+
+        if (x.type === "password")
+            x.type = "text";
+        else
+            x.type = "password";
+    }
+
+    function openLogin() {
+        document.getElementById("overlay").style.display = "block";
+        document.getElementById("loginPopup").style.display = "block";
+        toLogin();
+    }
+
+    function closeLogin() {
+        document.getElementById("overlay").style.display = "none";
+        document.getElementById("loginPopup").style.display = "none";
+    }
+
+    function toLogin() {
+        slides.style.transform = "translateX(0)";
+        document.getElementById("TabLogin").classList.add("active");
+        document.getElementById("TabRegister").classList.remove("active");
+    }
+
+    function toRegister() {
+        slides.style.transform = "translateX(-350px)";
+        document.getElementById("TabRegister").classList.add("active");
+        document.getElementById("TabLogin").classList.remove("active");
+    }
+
+    @if (TempData["LoginError"] != null)
+    {
+                <text>
+                    window.onload = function () {
+                        openLogin();
+                    };
+                </text>
+    }
+
+        @if (TempData["RegisterError"] != null)
+    {
+                <text>
+                    window.onload = function () {
+                        openLogin();
+                        toRegister();
+                    };
+                </text>
+    }
+
+    document.getElementById("togglePassword").addEventListener("click", function () {
+
+        const passwordInput = document.getElementById("passwordInput");
+
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            this.innerHTML = "🙈";
+        } else {
+            passwordInput.type = "password";
+            this.innerHTML = "👁";
+        }
+
+    });
+
+</script>
 <style>
                         .tab-header {
                         display: flex;
@@ -214,6 +330,28 @@
                         #loginPopup button {
                         border-radius: 4px;
                         }
+
+    header .nav-link {
+        color: #222 !important;
+        letter-spacing: 1px;
+        font-size: 15px;
+    }
+
+        header .nav-link:hover {
+            color: #4CAF50 !important;
+        }
+
+    .offcanvas .nav-link {
+        color: #222;
+    }
+
+        .offcanvas .nav-link:hover {
+            color: #4CAF50;
+        }
+
+    .navbar-toggler:focus {
+        box-shadow: none;
+    }
 
                         </style>
 <script>

@@ -15,19 +15,61 @@ namespace ifelse.Controllers
             _context = context;
         }
 
+        private bool IsAllowed()
+        {
+            var roleId = HttpContext.Session.GetInt32("roleId");
+
+            return roleId == 1 || roleId == 3;
+        }
+
+        private async Task UpdateTableStatusAsync(int tableId)
+        {
+            var table = await _context.TablesMeja.FindAsync(tableId);
+
+            if (table == null)
+                return;
+
+            var activeOrders = await _context.Orders
+                .Where(x =>
+                    x.TableId == tableId &&
+                    x.OrderStatus != "Done")
+                .ToListAsync();
+
+            // kalau tidak ada order aktif
+            if (!activeOrders.Any())
+            {
+                table.Status = "Available";
+                return;
+            }
+
+            // kalau masih ada order aktif
+            table.Status = "Occupied";
+        }
+
         public async Task<IActionResult> Index()
         {
+            if (!IsAllowed())
+                return RedirectToAction("Index", "Home");
+
             var vm = new OrderPageViewModel();
 
             // kasir/admin lihat semua order + detail receipt
             vm.Orders = await _context.Orders
                 .Include(x => x.OrderDetails)
-                .OrderByDescending(x => x.OrderId)
+                .ThenInclude(x => x.Menu)
+                .OrderBy(x => x.OrderId)
+                .ThenBy(x => x.OrderId)
                 .ToListAsync();
 
             // menu
             vm.Menus = await _context.Menus
                 .ToListAsync();
+
+            vm.Tables = await _context.TablesMeja
+                .OrderBy(x => x.TableNumber)
+                .ToListAsync();
+
+            ViewBag.Tables = vm.Tables;
 
             // cart session
             var cartJson =
@@ -40,6 +82,17 @@ namespace ifelse.Controllers
                     ?? new List<CartItem>();
             }
 
+            vm.LastOrderId =
+                HttpContext.Session.GetInt32("LastOrderId");
+
+            if (vm.LastOrderId != null)
+            {
+                vm.LastOrder = await _context.Orders
+                    .Include(x => x.OrderDetails)
+                    .ThenInclude(x => x.Menu)
+                    .FirstOrDefaultAsync(x => x.OrderId == vm.LastOrderId.Value);
+            }
+
             return View(vm);
         }
 
@@ -48,6 +101,9 @@ namespace ifelse.Controllers
             int menuId,
             int qty)
         {
+            if (!IsAllowed())
+                return RedirectToAction("Index", "Home");
+
             var menu =
                 await _context.Menus.FindAsync(menuId);
 
@@ -65,6 +121,21 @@ namespace ifelse.Controllers
 
             var existingItem = cart
                 .FirstOrDefault(x => x.MenuId == menuId);
+
+            var currentQty =
+                existingItem?.Qty ?? 0;
+
+            var totalQty =
+                currentQty + qty;
+
+            if (totalQty > menu.Stock)
+            {
+                TempData["CartError"] =
+                    $"{menu.MenuName} only left {menu.Stock}.";
+
+                return RedirectToAction("Index");
+            }
+
 
             if (existingItem != null)
             {
@@ -91,8 +162,13 @@ namespace ifelse.Controllers
         [HttpPost]
         public async Task<IActionResult> Checkout(
             int? customerId,
+            string? customerName,
+            string? customerRequest,
             int? tableId)
         {
+            if (!IsAllowed())
+                return RedirectToAction("Index", "Home");
+
             var cartJson =
                 HttpContext.Session.GetString("Cart");
 
@@ -116,12 +192,16 @@ namespace ifelse.Controllers
                 CustomerId =
                     customerId == 0 ? null : customerId,
 
+                CustomerName = customerName ?? string.Empty,
+
+                CustomerRequest = customerRequest,
+
                 TableId =
                     tableId == 0 ? null : tableId,
 
                 OrderDate = DateTime.Now,
 
-                PaymentStatus = "Paid",
+                PaymentStatus = "Pending",
 
                 OrderStatus = "Waiting",
 
@@ -165,6 +245,11 @@ namespace ifelse.Controllers
                     });
             }
 
+            if (tableId != null && tableId != 0)
+            {
+                await UpdateTableStatusAsync(tableId.Value);
+            }
+
             await _context.SaveChangesAsync();
 
             // simpan receipt id
@@ -181,17 +266,50 @@ namespace ifelse.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateStatus(
             int id,
-            string status)
+            string status,
+            string paymentStatus,
+            int? tableId)
         {
+            if (!IsAllowed())
+                return RedirectToAction("Index", "Home");
+
             var order =
                 await _context.Orders.FindAsync(id);
 
             if (order == null)
                 return NotFound();
 
+            var oldTableId = order.TableId;
+
             order.OrderStatus = status;
+            order.PaymentStatus = paymentStatus;
+            order.TableId = tableId == 0 ? null : tableId;
 
             await _context.SaveChangesAsync();
+
+            if (oldTableId != null)
+            {
+                await UpdateTableStatusAsync(oldTableId.Value);
+            }
+
+            if (order.TableId != null)
+            {
+                await UpdateTableStatusAsync(order.TableId.Value);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public IActionResult ResetCheckout()
+        {
+            if (!IsAllowed())
+                return RedirectToAction("Index", "Home");
+
+            HttpContext.Session.Remove("Cart");
+            HttpContext.Session.Remove("LastOrderId");
 
             return RedirectToAction("Index");
         }
@@ -200,6 +318,9 @@ namespace ifelse.Controllers
         public async Task<IActionResult> Delete(
             int id)
         {
+            if (!IsAllowed())
+                return RedirectToAction("Index", "Home");
+
             var order = await _context.Orders
                 .Include(x => x.OrderDetails)
                 .FirstOrDefaultAsync(x =>
@@ -207,6 +328,8 @@ namespace ifelse.Controllers
 
             if (order == null)
                 return NotFound();
+
+            var oldTableId = order.TableId;
 
             // hapus detail dulu
             _context.OrderDetails.RemoveRange(
@@ -216,6 +339,12 @@ namespace ifelse.Controllers
             _context.Orders.Remove(order);
 
             await _context.SaveChangesAsync();
+
+            if (oldTableId != null)
+            {
+                await UpdateTableStatusAsync(oldTableId.Value);
+                await _context.SaveChangesAsync();
+            }
 
             return RedirectToAction("Index");
         }
@@ -227,6 +356,7 @@ namespace ifelse.Controllers
         {
             var order = await _context.Orders
                 .Include(x => x.OrderDetails)
+                .ThenInclude(x => x.Menu)
                 .FirstOrDefaultAsync(x =>
                     x.OrderId == id);
 

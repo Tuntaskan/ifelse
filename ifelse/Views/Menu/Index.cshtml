@@ -7,25 +7,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Organic - Grocery Store HTML Website Template</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="author" content="">
-    <meta name="keywords" content="">
-    <meta name="description" content="">
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="css/vendor.css">
-    <link rel="stylesheet" type="text/css" href="style.css">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Open+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-
 </head>
 <body>
 
@@ -97,7 +78,7 @@
         <div class="container-lg">
             <div class="row">
                 <div class="col-lg-6 pt-5 mt-5">
-                    <h2 class="display-1 ls-1"><span class="fw-bold text-primary">Planarcafea</span>  <span class="fw-bold">Menu</span></h2>
+                    <h2 class="display-1 ls-1"><span class="fw-bold text-primary">PLANARCAFEA</span>  <span class="fw-bold">Menu</span></h2>
                     <p class="fs-4">Welcome Admin.</p>
                 </div>
             </div>
@@ -120,21 +101,420 @@
 
                     <div class="section-header d-flex justify-content-between align-items-center my-4">
 
-                        <h2 class="section-title">Daftar Menu</h2>
+                        <h2 class="section-title">List Menu</h2>
 
                         <button class="btn btn-primary rounded-1"
                                 data-bs-toggle="modal"
                                 data-bs-target="#createModal">
-                            Tambah Menu
+                            Add Menu
                         </button>
 
                     </div>
 
                 </div>
             </div>
+            <section id="maincourse" class="pb-5">
+                <div class="container-lg">
+
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="section-header d-flex flex-wrap justify-content-between my-4">
+
+                                <h2 class="section-title">Main Course</h2>
+
+
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5">
+
+                                @foreach (var item in Model.Where(x => x.CategoryId == MenuCategory.MainCourse))
+                                {
+                                    var isOutOfStock = item.Stock <= 0;
+
+                                    <div class="col">
+
+                                        <div class="product-item border rounded p-3 @(isOutOfStock ? "bg-light opacity-50" : "")">
+
+                                            <figure class="text-center mb-3">
+
+                                                @if (!string.IsNullOrEmpty(item.Photo))
+                                                {
+                                                    <img src="~/images/@item.Photo"
+                                                         class="img-fluid tab-image"
+                                                         style="height:180px; object-fit:cover;" />
+                                                }
+                                                else
+                                                {
+                                                    <img src="~/images/no-image.png"
+                                                         class="img-fluid tab-image"
+                                                         style="height:180px; object-fit:cover;" />
+                                                }
+
+                                            </figure>
+
+                                            <div class="d-flex flex-column text-center">
+
+                                                <h3 class="fs-6 fw-normal">
+                                                    @item.MenuName
+                                                </h3>
+
+                                                <div class="d-flex justify-content-center align-items-center gap-2">
+
+                                                    <span class="text-dark fw-semibold">
+                                                        Rp @item.Price.ToString("#,##0").Replace(",", ".")
+                                                    </span>
+
+                                                </div>
+
+                                                <small class="mb-2">
+                                                    Stock: @item.Stock
+                                                </small>
+
+                                                <span class="mb-3">
+                                                    @(item.Stock > 0 ? "Tersedia" : "Habis")
+                                                </span>
+
+                                                <div class="d-grid gap-2">
+
+                                                    <button class="btn btn-primary"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#editModal_@item.MenuId">
+                                                        Edit
+                                                    </button>
+
+                                                    <a asp-action="Delete"
+                                                       asp-route-id="@item.MenuId"
+                                                       class="btn btn-secondary">
+                                                        Delete
+                                                    </a>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    @await Html.PartialAsync("_EditModal", item)
+                                }
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="snack" class="pb-5">
+                <div class="container-lg">
+
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="section-header d-flex flex-wrap justify-content-between my-4">
+
+                                <h2 class="section-title">Snack</h2>
+
+
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5">
+
+                                @foreach (var item in Model.Where(x => x.CategoryId == MenuCategory.Snack))
+                                {
+                                    var isOutOfStock = item.Stock <= 0;
+
+                                    <div class="col">
+
+                                        <div class="product-item border rounded p-3 @(isOutOfStock ? "bg-light opacity-50" : "")">
+
+                                            <figure class="text-center mb-3">
+
+                                                @if (!string.IsNullOrEmpty(item.Photo))
+                                                {
+                                                    <img src="~/images/@item.Photo"
+                                                         class="img-fluid tab-image"
+                                                         style="height:180px; object-fit:cover;" />
+                                                }
+                                                else
+                                                {
+                                                    <img src="~/images/no-image.png"
+                                                         class="img-fluid tab-image"
+                                                         style="height:180px; object-fit:cover;" />
+                                                }
+
+                                            </figure>
+
+                                            <div class="d-flex flex-column text-center">
+
+                                                <h3 class="fs-6 fw-normal">
+                                                    @item.MenuName
+                                                </h3>
+
+                                                <div class="d-flex justify-content-center align-items-center gap-2">
+
+                                                    <span class="text-dark fw-semibold">
+                                                        Rp @item.Price.ToString("#,##0").Replace(",", ".")
+                                                    </span>
+
+                                                </div>
+
+                                                <small class="mb-2">
+                                                    Stock: @item.Stock
+                                                </small>
+
+                                                <span class="mb-3">
+                                                    @(item.Stock > 0 ? "Tersedia" : "Habis")
+                                                </span>
+
+                                                <div class="d-grid gap-2">
+
+                                                    <button class="btn btn-primary"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#editModal_@item.MenuId">
+                                                        Edit
+                                                    </button>
+
+                                                    <a asp-action="Delete"
+                                                       asp-route-id="@item.MenuId"
+                                                       class="btn btn-secondary">
+                                                        Delete
+                                                    </a>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    @await Html.PartialAsync("_EditModal", item)
+                                }
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="dessert" class="pb-5">
+                <div class="container-lg">
+
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="section-header d-flex flex-wrap justify-content-between my-4">
+
+                                <h2 class="section-title">Dessert</h2>
+
+
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5">
+
+                                @foreach (var item in Model.Where(x => x.CategoryId == MenuCategory.Dessert))
+                                {
+                                    var isOutOfStock = item.Stock <= 0;
+
+                                    <div class="col">
+
+                                        <div class="product-item border rounded p-3 @(isOutOfStock ? "bg-light opacity-50" : "")">
+
+                                            <figure class="text-center mb-3">
+
+                                                @if (!string.IsNullOrEmpty(item.Photo))
+                                                {
+                                                    <img src="~/images/@item.Photo"
+                                                         class="img-fluid tab-image"
+                                                         style="height:180px; object-fit:cover;" />
+                                                }
+                                                else
+                                                {
+                                                    <img src="~/images/no-image.png"
+                                                         class="img-fluid tab-image"
+                                                         style="height:180px; object-fit:cover;" />
+                                                }
+
+                                            </figure>
+
+                                            <div class="d-flex flex-column text-center">
+
+                                                <h3 class="fs-6 fw-normal">
+                                                    @item.MenuName
+                                                </h3>
+
+                                                <div class="d-flex justify-content-center align-items-center gap-2">
+
+                                                    <span class="text-dark fw-semibold">
+                                                        Rp @item.Price.ToString("#,##0").Replace(",", ".")
+                                                    </span>
+
+                                                </div>
+
+                                                <small class="mb-2">
+                                                    Stock: @item.Stock
+                                                </small>
+
+                                                <span class="mb-3">
+                                                    @(item.Stock > 0 ? "Tersedia" : "Habis")
+                                                </span>
+
+                                                <div class="d-grid gap-2">
+
+                                                    <button class="btn btn-primary"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#editModal_@item.MenuId">
+                                                        Edit
+                                                    </button>
+
+                                                    <a asp-action="Delete"
+                                                       asp-route-id="@item.MenuId"
+                                                       class="btn btn-secondary">
+                                                        Delete
+                                                    </a>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    @await Html.PartialAsync("_EditModal", item)
+                                }
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="drink" class="pb-5">
+                <div class="container-lg">
+
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="section-header d-flex flex-wrap justify-content-between my-4">
+
+                                <h2 class="section-title">Drink</h2>
+
+
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5">
+
+                                @foreach (var item in Model.Where(x => x.CategoryId == MenuCategory.Drink))
+                                {
+                                    var isOutOfStock = item.Stock <= 0;
+
+                                    <div class="col">
+
+                                        <div class="product-item border rounded p-3 @(isOutOfStock ? "bg-light opacity-50" : "")">
+
+                                            <figure class="text-center mb-3">
+
+                                                @if (!string.IsNullOrEmpty(item.Photo))
+                                                {
+                                                    <img src="~/images/@item.Photo"
+                                                         class="img-fluid tab-image"
+                                                         style="height:180px; object-fit:cover;" />
+                                                }
+                                                else
+                                                {
+                                                    <img src="~/images/no-image.png"
+                                                         class="img-fluid tab-image"
+                                                         style="height:180px; object-fit:cover;" />
+                                                }
+
+                                            </figure>
+
+                                            <div class="d-flex flex-column text-center">
+
+                                                <h3 class="fs-6 fw-normal">
+                                                    @item.MenuName
+                                                </h3>
+
+                                                <div class="d-flex justify-content-center align-items-center gap-2">
+
+                                                    <span class="text-dark fw-semibold">
+                                                        Rp @item.Price.ToString("#,##0").Replace(",", ".")
+                                                    </span>
+
+                                                </div>
+
+                                                <small class="mb-2">
+                                                    Stock: @item.Stock
+                                                </small>
+
+                                                <span class="mb-3">
+                                                    @(item.Stock > 0 ? "Tersedia" : "Habis")
+                                                </span>
+
+                                                <div class="d-grid gap-2">
+
+                                                    <button class="btn btn-primary"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#editModal_@item.MenuId">
+                                                        Edit
+                                                    </button>
+
+                                                    <a asp-action="Delete"
+                                                       asp-route-id="@item.MenuId"
+                                                       class="btn btn-secondary">
+                                                        Delete
+                                                    </a>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    @await Html.PartialAsync("_EditModal", item)
+                                }
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             <!-- Product Grid -->
-            <div class="row">
+            @* <div class="row">
                 <div class="col-md-12">
 
                     <div class="product-grid row
@@ -212,16 +592,16 @@
 
                             </div>
 
-                            @await Html.PartialAsync("_EditModal", item)
+                            
                         }
                     </div>
 
                 </div>
-            </div>
+            </div> *@
 
         </div>
     </section>
-
+    
     @await Html.PartialAsync("_CreateModal", new ifelse.Models.MenuModel())
 
     <script src="js/jquery-1.11.0.min.js"></script>

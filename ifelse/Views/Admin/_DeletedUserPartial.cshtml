@@ -1,0 +1,30 @@
+﻿@model ifelse.Models.User
+
+<form asp-action="ConfirmDeleteUser" method="post">
+
+    <input type="hidden"
+           name="id"
+           value="@Model.UserId" />
+
+    <div class="modal-header">
+        <h5>Disable User</h5>
+    </div>
+
+    <div class="modal-body">
+
+        Disable user:
+
+        <b>@Model.FullName</b> ?
+
+    </div>
+
+    <div class="modal-footer">
+
+        <button type="submit"
+                class="btn btn-danger">
+            Confirm
+        </button>
+
+    </div>
+
+</form>

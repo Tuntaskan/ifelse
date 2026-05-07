@@ -3,6 +3,7 @@ using System.Text.Json;
 using ifelse.Data;
 using ifelse.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ifelse.Controllers
 {
@@ -24,8 +25,14 @@ namespace ifelse.Controllers
             var vm = new OrderPageViewModel
             {
                 Menus = _context.Menus.ToList(),
+                Tables = _context.TablesMeja
+                    .OrderBy(x => x.TableNumber)
+                    .ToList(),
                 Cart = new List<CartItem>()
             };
+
+            vm.LastOrderId =
+                HttpContext.Session.GetInt32("LastOrderId");
 
             // ambil cart dari session
             var cartJson =
@@ -34,7 +41,14 @@ namespace ifelse.Controllers
             if (!string.IsNullOrEmpty(cartJson))
             {
                 vm.Cart = JsonSerializer.Deserialize<List<CartItem>>(cartJson) ?? new List<CartItem>();
-                vm.LastOrderId = HttpContext.Session.GetInt32("LastOrderId");
+            }
+
+            if (vm.LastOrderId != null)
+            {
+                vm.LastOrder = _context.Orders
+                    .Include(x => x.OrderDetails)
+                    .ThenInclude(x => x.Menu)
+                    .FirstOrDefault(x => x.OrderId == vm.LastOrderId.Value);
             }
 
             return View(vm);

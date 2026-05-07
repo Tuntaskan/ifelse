@@ -18,7 +18,7 @@ namespace ifelse.Models
 
         public decimal TotalPrice { get; set; }
 
-        public string PaymentStatus { get; set; } = "Unpaid";
+        public string? PaymentStatus { get; set; } = "Unpaid";
 
         public string OrderStatus { get; set; } = "Waiting";
 
@@ -41,5 +41,7 @@ namespace ifelse.Models
         public decimal Subtotal { get; set; }
 
         public Order? Order { get; set; }
+
+        public MenuModel? Menu { get; set; }
     }
 }

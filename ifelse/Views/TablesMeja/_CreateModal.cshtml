@@ -1,0 +1,42 @@
+@model ifelse.Models.TableMeja
+
+<div class="modal fade" id="createTableModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-controller="TablesMeja"
+                  asp-action="Create"
+                  method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Table</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label asp-for="TableNumber" class="form-label">Table Number</label>
+                        <input asp-for="TableNumber"
+                               type="number"
+                               min="1"
+                               class="form-control"
+                               placeholder="Contoh: 12"
+                               required />
+                    </div>
+
+                    <div class="mb-2">
+                        <label asp-for="QRCode" class="form-label">QR Code</label>
+                        <input asp-for="QRCode"
+                               class="form-control"
+                               placeholder="Opsional" />
+                    </div>
+
+                    <input asp-for="Status" type="hidden" value="Available" />
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

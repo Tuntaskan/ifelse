@@ -14,9 +14,7 @@
 
                     <h2 class="section-title">Main Course</h2>
 
-                    <div class="d-flex align-items-center">
-                        <a href="#" class="btn btn-primary rounded-1">View All</a>
-                    </div>
+                    
 
                 </div>
 
@@ -36,19 +34,21 @@
 
                             <div class="product-item border rounded p-3 @(soldOut ? "opacity-50 bg-light" : "")">
 
-                                <figure>
-                                    @if (!soldOut)
+                                <figure class="text-center mb-3">
+
+                                    @if (!string.IsNullOrEmpty(item.Photo))
                                     {
-                                        <a href="#">
-                                            <img src="images/main1.png" class="tab-image">
-                                        </a>
+                                        <img src="~/images/@item.Photo"
+                                             class="img-fluid tab-image"
+                                             style="height:180px; object-fit:cover;" />
                                     }
                                     else
                                     {
-                                        <img src="images/main1.png"
-                                             class="tab-image"
-                                             style="pointer-events:none;" />
+                                        <img src="~/images/no-image.png"
+                                             class="img-fluid tab-image"
+                                             style="height:180px; object-fit:cover;" />
                                     }
+
                                 </figure>
 
                                 <div class="d-flex flex-column text-center">
@@ -135,9 +135,7 @@
 
                     <h2 class="section-title">Snack</h2>
 
-                    <div class="d-flex align-items-center">
-                        <a href="#" class="btn btn-primary rounded-1">View All</a>
-                    </div>
+                    
 
                 </div>
 
@@ -157,19 +155,21 @@
 
                             <div class="product-item border rounded p-3 @(soldOut ? "opacity-50 bg-light" : "")">
 
-                                <figure>
-                                    @if (!soldOut)
+                                <figure class="text-center mb-3">
+
+                                    @if (!string.IsNullOrEmpty(item.Photo))
                                     {
-                                        <a href="#">
-                                            <img src="images/main1.png" class="tab-image">
-                                        </a>
+                                        <img src="~/images/@item.Photo"
+                                             class="img-fluid tab-image"
+                                             style="height:180px; object-fit:cover;" />
                                     }
                                     else
                                     {
-                                        <img src="images/main1.png"
-                                             class="tab-image"
-                                             style="pointer-events:none;" />
+                                        <img src="~/images/no-image.png"
+                                             class="img-fluid tab-image"
+                                             style="height:180px; object-fit:cover;" />
                                     }
+
                                 </figure>
 
                                 <div class="d-flex flex-column text-center">
@@ -256,9 +256,7 @@
 
                     <h2 class="section-title">Dessert</h2>
 
-                    <div class="d-flex align-items-center">
-                        <a href="#" class="btn btn-primary rounded-1">View All</a>
-                    </div>
+                    
 
                 </div>
 
@@ -278,19 +276,21 @@
 
                             <div class="product-item border rounded p-3 @(soldOut ? "opacity-50 bg-light" : "")">
 
-                                <figure>
-                                    @if (!soldOut)
+                                <figure class="text-center mb-3">
+
+                                    @if (!string.IsNullOrEmpty(item.Photo))
                                     {
-                                        <a href="#">
-                                            <img src="images/dessert4.png" class="tab-image">
-                                        </a>
+                                        <img src="~/images/@item.Photo"
+                                             class="img-fluid tab-image"
+                                             style="height:180px; object-fit:cover;" />
                                     }
                                     else
                                     {
-                                        <img src="images/dessert4.png"
-                                             class="tab-image"
-                                             style="pointer-events:none;" />
+                                        <img src="~/images/no-image.png"
+                                             class="img-fluid tab-image"
+                                             style="height:180px; object-fit:cover;" />
                                     }
+
                                 </figure>
 
                                 <div class="d-flex flex-column text-center">
@@ -377,9 +377,7 @@
 
                     <h2 class="section-title">Drink</h2>
 
-                    <div class="d-flex align-items-center">
-                        <a href="#" class="btn btn-primary rounded-1">View All</a>
-                    </div>
+                    
 
                 </div>
 
@@ -399,19 +397,21 @@
 
                             <div class="product-item border rounded p-3 @(soldOut ? "opacity-50 bg-light" : "")">
 
-                                <figure>
-                                    @if (!soldOut)
+                                <figure class="text-center mb-3">
+
+                                    @if (!string.IsNullOrEmpty(item.Photo))
                                     {
-                                        <a href="#">
-                                            <img src="images/main1.png" class="tab-image">
-                                        </a>
+                                        <img src="~/images/@item.Photo"
+                                             class="img-fluid tab-image"
+                                             style="height:180px; object-fit:cover;" />
                                     }
                                     else
                                     {
-                                        <img src="images/main1.png"
-                                             class="tab-image"
-                                             style="pointer-events:none;" />
+                                        <img src="~/images/no-image.png"
+                                             class="img-fluid tab-image"
+                                             style="height:180px; object-fit:cover;" />
                                     }
+
                                 </figure>
 
                                 <div class="d-flex flex-column text-center">
@@ -468,7 +468,7 @@
                                         else
                                         {
                                             <button class="btn btn-secondary w-100" disabled>
-                                                Stock Habis
+                                                Stock Empty
                                             </button>
                                         }
 
@@ -490,6 +490,19 @@
 
 
 <!-- Cart -->
+@if (TempData["CartError"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["CartError"]
+    </div>
+}
+
+@if (TempData["CartSuccess"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["CartSuccess"]
+    </div>
+}
 
 <div class="card p-3 mt-5">
 
@@ -516,10 +529,41 @@
             Checkout
 
         </button>
+
+        <form asp-controller="UserOrder"
+              asp-action="ResetCheckout"
+              method="post"
+              class="mt-2">
+
+            <button type="submit"
+                    class="btn btn-outline-secondary rounded-1 w-100">
+
+                Reset Checkout
+
+            </button>
+
+        </form>
     }
     else
     {
-        <p>Cart kosong</p>
+        <p>Cart Empty</p>
+
+        @if (Model.LastOrder != null)
+        {
+            <form asp-controller="UserOrder"
+                  asp-action="ResetCheckout"
+                  method="post"
+                  class="mt-2">
+
+                <button type="submit"
+                        class="btn btn-outline-secondary rounded-1 w-100">
+
+                    Reset Checkout
+
+                </button>
+
+            </form>
+        }
     }
 
 </div>
@@ -549,35 +593,43 @@
             var fullName = Context.Session.GetString("fullname");
         }
 
+        <!-- MEMBER -->
         @if (roleId == 6)
         {
-            <!-- MEMBER -->
             <input type="text"
                    name="customerName"
                    value="@fullName"
                    class="form-control mb-2"
                    readonly />
-        }
-        else
-        {
-            <!-- GUEST -->
+        } else {
             <input type="text"
                    name="customerName"
-                   placeholder="Nama Anda"
+                   placeholder="Nama"
                    class="form-control mb-2"
-                   required />
+                   />
         }
 
+        <!-- Request -->
         <input type="text"
                name="customerRequest"
                placeholder="Request (opsional)"
-               class="form-control mb-2" />
+               class="form-control mb-3" />
 
+
+        <!-- PILIH MEJA KHUSUS MEMBER -->
         @if (roleId == 6)
         {
-            <h5>Pilih Meja</h5>
+            <label class="form-label">Reservation Date</label>
 
-            <div class="d-flex flex-wrap gap-2 mb-3">
+            <input type="date"
+                   name="reservationDate"
+                   class="form-control mb-3"
+                   min="@DateTime.Today.ToString("yyyy-MM-dd")"
+                   value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+
+            <h5 class="mb-3">Pick Table</h5>
+
+            <div class="table-grid mb-4">
 
                 @foreach (var meja in Model.Tables)
                 {
@@ -585,7 +637,7 @@
                     meja.Status == "Booked"
                     || meja.Status == "Occupied";
 
-                    <label>
+                    <label class="seat-selector">
 
                         <input type="radio"
                                name="tableId"
@@ -594,9 +646,15 @@
                                @(isBooked ? "disabled" : "") />
 
                         <div class="seat-box
-                            @(isBooked ? "seat-full" : "seat-empty")">
+                                @(isBooked ? "seat-full" : "seat-empty")">
 
-                            @meja.TableNumber
+                            <span>
+                                @meja.TableNumber
+                            </span>
+
+                            <small>
+                                @meja.Status
+                            </small>
 
                         </div>
 
@@ -606,9 +664,12 @@
             </div>
         }
 
+
+        <!-- PAYMENT -->
         <select id="paymentMethod"
                 name="paymentMethod"
-                class="form-control mb-3">
+                class="form-control mb-3"
+                onchange="toggleQris()">
 
             <option value="Cash">
                 Cash
@@ -620,9 +681,28 @@
 
         </select>
 
-        <!-- QR -->
+        <div id="qrisUpload" class="mb-2" style="display:none;">
+            <label>QRIS Payment Proof</label>
+            <input type="file"
+                   name="QrisPhoto"
+                   class="form-control"
+                   accept="image/*" />
+        </div>
+
+        <script>
+            function toggleQris() {
+                const method = document.getElementById("paymentMethod").value;
+                const qrisDiv = document.getElementById("qrisUpload");
+                qrisDiv.style.display = method === "QRIS" ? "block" : "none";
+            }
+        </script>
+
+
+        <!-- QRIS -->
         <div id="qrisSection"
-             style="display:none; text-align:center;">
+             style="display:none;
+                text-align:center;
+                margin-bottom:20px;">
 
             <h5>Scan QRIS</h5>
 
@@ -631,9 +711,12 @@
 
         </div>
 
+
         <button type="submit"
                 class="btn btn-primary w-100">
+
             Confirm Order
+
         </button>
 
         <button type="button"
@@ -651,53 +734,115 @@
 
 
 <!-- RECEIPT POPUP -->
-<div id="receiptPopup"
-     style="display:none;
-            position:fixed;
-            top:50%;
-            left:50%;
-            transform:translate(-50%,-50%);
-            background:white;
-            padding:30px;
-            border-radius:12px;
-            z-index:9999;
-            width:400px;">
+<!-- <div id="receiptPopup" class="receipt-overlay">
 
-    <h3>Receipt</h3>
+    <div id="printReceipt" class="receipt-paper">
 
-    @if (Model.LastOrderId != null)
-    {
-        <p>
-            Order ID:
-            #@Model.LastOrderId
-        </p>
-
-        @foreach (var item in Model.Cart)
+        @if (Model.LastOrder != null)
         {
-            <p>
-                @item.MenuName
-                x @item.Qty
-                =
-                Rp @item.Subtotal.ToString("#,##0").Replace(",", ".")
-            </p>
+            var selectedTable = Model.LastOrder.TableId != null
+                ? Model.Tables.FirstOrDefault(x => x.TableId == Model.LastOrder.TableId.Value)
+                : null;
+
+            <div class="receipt-header">
+
+                <h5>IFELSE CAFE</h5>
+
+                <small>
+                    Jl. Restaurant System
+                </small>
+
+                <hr />
+
+            </div>
+
+            <div class="receipt-info">
+
+                <div>No: #@Model.LastOrder.OrderId</div>
+
+                <div>
+                    @Model.LastOrder.OrderDate.ToString("dd/MM/yyyy HH:mm")
+                </div>
+
+                <div>
+                    Customer:
+                    @Model.LastOrder.CustomerName
+                </div>
+
+                @if (selectedTable != null)
+                {
+                    <div>
+                        Table:
+                        @selectedTable.TableNumber
+                    </div>
+                }
+
+            </div>
+
+            <hr />
+
+            @foreach (var item in Model.LastOrder.OrderDetails)
+            {
+                <div class="receipt-item">
+
+                    <div>
+                        @(item.Menu?.MenuName ?? "Menu")
+                    </div>
+
+                    <div>
+                        @item.Qty x
+                        @item.Price.ToString("#,##0")
+                    </div>
+
+                    <div>
+                        Rp @item.Subtotal.ToString("#,##0")
+                    </div>
+
+                </div>
+            }
+
+            <hr />
+
+            <div class="receipt-total">
+
+                TOTAL
+
+                <span>
+                    Rp @Model.LastOrder.TotalPrice.ToString("#,##0")
+                </span>
+
+            </div>
+
+            <hr />
+
+            <div class="receipt-footer">
+
+                Terima kasih 🙏
+
+            </div>
         }
 
-        <hr />
+    </div>
 
-        <p>
-            Total:
-            Rp @Model.Cart.Sum(x => x.Subtotal).ToString("#,##0").Replace(",", ".")
-        </p>
-    }
+    <div class="mt-3">
 
-    <button onclick="closeReceipt()"
-            class="btn btn-primary">
+        <button onclick="printReceipt()"
+                class="btn btn-success w-100 mb-2">
 
-        Close
+            Print Receipt
 
-    </button>
+        </button>
 
-</div>
+        <button onclick="closeReceipt()"
+                class="btn btn-secondary w-100">
+
+            Close
+
+        </button>
+
+    </div>
+
+</div> -->
 
 
 
@@ -719,6 +864,23 @@
         document
             .getElementById("receiptPopup")
             .style.display = "none";
+    }
+
+        function printReceipt() {
+
+        let printContents =
+            document.getElementById("printReceipt").innerHTML;
+
+        let originalContents =
+            document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+
+        window.print();
+
+        document.body.innerHTML = originalContents;
+
+        location.reload();
     }
 
     // QRIS show/hide
@@ -746,7 +908,7 @@
         }
 
         // receipt popup after checkout
-        @if (Model.LastOrderId != null)
+        @if (Model.LastOrder != null)
         {
                 <text>
                     document
@@ -760,6 +922,16 @@
 </script>
 
 <style>
+    .table-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        gap: 10px;
+    }
+
+    .seat-selector {
+        cursor: pointer;
+    }
+
     .seat-box {
         width: 60px;
         height: 60px;
@@ -785,5 +957,52 @@
     input[type=radio]:checked + .seat-box {
         border: 2px solid #27714E;
         transform: scale(1.05);
+    }
+
+    .receipt-paper {
+        width: 280px;
+        background: white;
+        padding: 15px;
+        font-family: monospace;
+        font-size: 12px;
+        margin: auto;
+    }
+
+    .receipt-header {
+        text-align: center;
+    }
+
+    .receipt-item {
+        margin-bottom: 8px;
+    }
+
+    .receipt-total {
+        display: flex;
+        justify-content: space-between;
+        font-weight: bold;
+    }
+
+    .receipt-footer {
+        text-align: center;
+        margin-top: 15px;
+    }
+
+    @@media print {
+        body * {
+        visibility: hidden;
+        }
+
+    #printReceipt,
+    #printReceipt * {
+        visibility: visible;
+    }
+
+    #printReceipt {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 58mm; /* thermal printer */
+    }
+
     }
 </style>

@@ -29,7 +29,7 @@ namespace ifelse.Controllers
 
             if (user == null)
             {
-                TempData["LoginError"] = "Username atau password salah";
+                TempData["LoginError"] = "Username or password wrong";
                 return RedirectToAction("Index", "Home");
             }
 
@@ -44,6 +44,7 @@ namespace ifelse.Controllers
                 _ => "unknown"
             };
 
+            HttpContext.Session.SetInt32("userId", user.UserId);
             HttpContext.Session.SetString("fullname", user.FullName);
             HttpContext.Session.SetString("username", user.Username);
             HttpContext.Session.SetInt32("roleId", user.RoleId);
@@ -64,7 +65,7 @@ namespace ifelse.Controllers
                 case 6:
                     return RedirectToAction("Index", "Member");
                 default:
-                    ViewBag.Error = "Role tidak dikenali";
+                    ViewBag.Error = "Role not found";
                     return RedirectToAction("Index", "Home");
             }
         }
@@ -93,7 +94,7 @@ namespace ifelse.Controllers
 
             if (existingUser != null)
             {
-                TempData["RegisterError"] = "Username sudah dipakai";
+                TempData["RegisterError"] = "Username already used";
                 return RedirectToAction("Index", "Home");
             }
 
@@ -119,7 +120,13 @@ namespace ifelse.Controllers
             _context.Users.Add(newUser);
             _context.SaveChanges();
 
-            TempData["Success"] = "Registrasi berhasil. Silakan login.";
+            HttpContext.Session.SetInt32("userId", newUser.UserId);
+            HttpContext.Session.SetString("fullname", newUser.FullName);
+            HttpContext.Session.SetString("username", newUser.Username);
+            HttpContext.Session.SetInt32("roleId", newUser.RoleId);
+            HttpContext.Session.SetString("role", "customer");
+
+            TempData["Success"] = "Registrasi succeed. Please login.";
 
             return RedirectToAction("Index", "Member");
         }

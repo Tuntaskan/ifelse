@@ -1,0 +1,344 @@
+@model ifelse.Models.ManagementDashboardViewModel
+
+
+<style>
+    .text-muted,
+    .table,
+    .table th,
+    .table td,
+    .card-body,
+    .form-label,
+    h4 {
+        color: black !important;
+    }
+
+    .theme-table th {
+        font-weight: 700;
+    }
+
+    .theme-table td,
+    .theme-table th {
+        vertical-align: middle;
+    }
+</style>
+
+
+<div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+
+    <div class="col">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+
+                <div class="text-muted">
+                    Total Sales
+                </div>
+
+                <div class="display-6 fw-bold">
+                    Rp @Model.TotalSales.ToString("#,##0").Replace(",", ".")
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+
+                <div class="text-muted">
+                    Paid Orders
+                </div>
+
+                <div class="display-6 fw-bold">
+                    @Model.PaidOrders
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+
+                <div class="text-muted">
+                    Pending Orders
+                </div>
+
+                <div class="display-6 fw-bold">
+                    @Model.WaitingOrders
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-body">
+
+        <h4 class="mb-3">
+            Sales Report
+        </h4>
+
+
+        <form method="get"
+              class="row g-2 align-items-end mb-3">
+
+            <div class="col-auto">
+
+                <label for="salesDate"
+                       class="form-label mb-0">
+
+                    Filter Date
+
+                </label>
+
+                <input id="salesDate"
+                       name="salesDate"
+                       type="date"
+                       class="form-control"
+                       value="@(Model.SalesDate?.ToString("yyyy-MM-dd"))" />
+
+            </div>
+
+
+            <div class="col-auto">
+
+                <button type="submit"
+                        class="btn btn-primary">
+
+                    Apply
+
+                </button>
+
+                <a href="?"
+                   class="btn btn-outline-secondary">
+
+                    Reset
+
+                </a>
+
+            </div>
+
+        </form>
+
+
+
+        <div class="table-responsive">
+
+            <table class="table table-sm align-middle theme-table">
+
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>Customer</th>
+                        <th>Menu</th>
+                        <th>Total</th>
+                        <th>Payment</th>
+                        <th>Date Time</th>
+                    </tr>
+                </thead>
+
+
+                <tbody>
+                    @foreach (var item in Model.SalesOrders.Select((order, index) => new { order, index }))
+                    {
+                        <tr>
+
+                            <td>
+                                @(item.index + 1)
+                            </td>
+
+                            <td>@item.order.CustomerName</td>
+
+                            <td>
+                                @if (item.order.OrderDetails.Any())
+                                {
+                                    <ul class="mb-0 ps-3">
+                                        @foreach (var detail in item.order.OrderDetails)
+                                        {
+                                            <li>
+                                                @(detail.Menu?.MenuName ?? $"Menu #{detail.MenuId}") x @detail.Qty
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                            </td>
+
+                            <td>
+                                Rp @item.order.TotalPrice.ToString("#,##0").Replace(",", ".")
+                            </td>
+
+                            <td>@item.order.PaymentStatus</td>
+
+                            <td>@item.order.OrderDate</td>
+
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+<div class="row g-4">
+
+    <!-- MENU -->
+    <div class="col-lg-4">
+
+        <div class="card border-0 shadow-sm h-100">
+
+            <div class="card-body">
+
+                <h4 class="mb-3">
+                    Menu List
+                </h4>
+
+                <div class="table-responsive">
+
+                    <table class="table table-sm align-middle theme-table">
+
+                        <thead>
+                            <tr>
+                                <th>Menu</th>
+                                <th>Category</th>
+                                <th>Stock</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var menu in Model.Menus)
+                            {
+                                <tr>
+                                    <td>@menu.MenuName</td>
+                                    <td>@menu.CategoryId</td>
+                                    <td>@menu.Stock</td>
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- INVENTORY -->
+    <div class="col-lg-4">
+
+        <div class="card border-0 shadow-sm h-100">
+
+            <div class="card-body">
+
+                <h4 class="mb-3">
+                    Inventory List
+                </h4>
+
+                <div class="table-responsive">
+
+                    <table class="table table-sm align-middle theme-table">
+
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Stock</th>
+                                <th>Condition</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var item in Model.Inventory)
+                            {
+                                <tr>
+                                    <td>@item.ItemName</td>
+                                    <td>@item.Stock @item.Unit</td>
+                                    <td>@item.Condition</td>
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- BROKEN REPORT -->
+    <div class="col-lg-4">
+
+        <div class="card border-0 shadow-sm h-100">
+
+            <div class="card-body">
+
+                <h4 class="mb-3">
+                    Broken Item Reports
+                </h4>
+
+                <div class="table-responsive">
+
+                    <table class="table table-sm align-middle theme-table">
+
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Qty</th>
+                                <th>Reported By</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var report in Model.BrokenReports)
+                            {
+                                <tr>
+                                    <td>@report.Inventory?.ItemName</td>
+                                    <td>@report.QtyBroken</td>
+                                    <td>@report.BrokenBy</td>
+                                    <td>@report.Notes</td>
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

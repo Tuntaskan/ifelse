@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ifelse.Data;
 using ifelse.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ifelse.Controllers
 {
@@ -13,18 +14,41 @@ namespace ifelse.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        private bool IsAllowed()
         {
-            int? roleId = HttpContext.Session.GetInt32("roleId");
+            return HttpContext.Session.GetInt32("roleId") == 5;
+        }
 
-            if (roleId != 5)
+        private ManagementDashboardViewModel BuildDashboardViewModel(DateTime? salesDate)
+        {
+            return new ManagementDashboardViewModel
             {
-                return RedirectToAction("Index", "Login");
-            }
+                SalesDate = salesDate,
+                Orders = _context.Orders
+                    .Include(x => x.OrderDetails)
+                    .ThenInclude(x => x.Menu)
+                    .OrderByDescending(x => x.OrderDate)
+                    .ToList(),
+                Menus = _context.Menus
+                    .OrderBy(x => x.MenuName)
+                    .ToList(),
+                Inventory = _context.Inventory
+                    .OrderBy(x => x.ItemName)
+                    .ToList(),
+                BrokenReports = _context.BrokenItemReports
+                    .Include(x => x.Inventory)
+                    .OrderByDescending(x => x.ReportDate)
+                    .ToList()
+            };
+        }
+
+        public IActionResult Index(DateTime? salesDate)
+        {
+            if (!IsAllowed())
+                return RedirectToAction("Index", "Home");
 
             ViewBag.Username = HttpContext.Session.GetString("username");
-            var menus = _context.Menus.ToList();
-            return View();
+            return View(BuildDashboardViewModel(salesDate));
         }
     }
 }

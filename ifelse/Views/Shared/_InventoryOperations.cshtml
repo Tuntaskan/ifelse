@@ -1,0 +1,495 @@
+@model ifelse.Models.ManagementDashboardViewModel
+
+<style>
+    body,
+    .card,
+    .table,
+    .table th,
+    .table td,
+    .form-control,
+    .form-select,
+    .modal-title,
+    h4,
+    label {
+        color: black !important;
+        font-family: 'Nunito', sans-serif;
+    }
+
+    .inventory-card {
+        border-radius: 20px;
+        border: none;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+    }
+
+    .table thead th {
+        font-weight: 700;
+    }
+
+    .btn-action {
+        border-radius: 12px;
+        font-weight: 700;
+        margin-right: 5px;
+    }
+
+    .form-control,
+    .form-select {
+        border-radius: 12px;
+    }
+</style>
+
+
+@if (TempData["InventorySuccess"] != null)
+{
+    <div class="alert alert-success">@TempData["InventorySuccess"]</div>
+}
+
+@if (TempData["InventoryError"] != null)
+{
+    <div class="alert alert-danger">@TempData["InventoryError"]</div>
+}
+
+@if (TempData["BrokenItemSuccess"] != null)
+{
+    <div class="alert alert-success">@TempData["BrokenItemSuccess"]</div>
+}
+
+@if (TempData["BrokenItemError"] != null)
+{
+    <div class="alert alert-danger">@TempData["BrokenItemError"]</div>
+}
+
+
+
+<div class="row g-4 mb-5">
+
+    <!-- CREATE INVENTORY -->
+    <div class="col-lg-6">
+        <div class="card inventory-card h-100">
+            <div class="card-body">
+
+                <h4>Add Inventory</h4>
+
+                <form asp-controller="Inventory"
+                      asp-action="Create"
+                      method="post">
+
+                    <input type="hidden"
+                           name="redirectController"
+                           value="@ViewContext.RouteData.Values["controller"]" 
+                           style="border: 1px solid black; border-radius: 10px;" />
+
+                    <input type="hidden"
+                           name="redirectAction"
+                           value="Index" 
+                           style="border: 1px solid black; border-radius: 10px;" />
+
+                    <input name="ItemName"
+                           class="form-control mb-2"
+                           placeholder="Item Name"
+                           required 
+                           style="border: 1px solid black; border-radius: 10px;" />
+
+                    <select name="Category"
+                            class="form-select mb-2"
+                            required
+                            style="border: 1px solid black; border-radius: 10px;">
+
+                        <option value="">Select Category</option>
+                        <option value="Raw Item">Raw Item</option>
+                        <option value="Breakable Item">Breakable Item</option>
+
+                    </select>
+
+                    <input name="Stock"
+                           type="number"
+                           class="form-control mb-2"
+                           required 
+                           style="border: 1px solid black; border-radius: 10px;" />
+
+                    <select name="Unit"
+                            class="form-select mb-2"
+                            required
+                            style="border: 1px solid black; border-radius: 10px;">
+
+                        <option value="">Select Unit</option>
+                        <option value="Kg">Kg</option>
+                        <option value="Liter">Liter</option>
+                        <option value="Pcs">Pcs</option>
+                        <option value="Pack">Pack</option>
+
+                    </select>
+
+                    <input name="Condition"
+                           class="form-control mb-3"
+                           placeholder="Conditions" 
+                           style="border: 1px solid black; border-radius: 10px;" />
+
+                    <button class="btn btn-primary">
+                        Save Inventory
+                    </button>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- CREATE BROKEN -->
+    <div class="col-lg-6">
+        <div class="card inventory-card h-100">
+            <div class="card-body">
+
+                <h4>Broken Item Report</h4>
+
+                <form asp-controller="BrokenItem"
+                      asp-action="Create"
+                      method="post">
+
+                    <input type="hidden"
+                           name="redirectController"
+                           value="@ViewContext.RouteData.Values["controller"]" 
+                           style="border: 1px solid black; border-radius: 10px;" />
+
+                    <input type="hidden"
+                           name="redirectAction"
+                           value="Index" 
+                           style="border: 1px solid black; border-radius: 10px;" />
+
+                    <select name="InventoryId"
+                            class="form-select mb-2"
+                            required
+                            style="border: 1px solid black; border-radius: 10px;">
+
+                        <option value="">Select inventory</option>
+
+                        @foreach (var item in Model.Inventory)
+                        {
+                            <option value="@item.InventoryId">
+                                @item.ItemName (@item.Stock @item.Unit)
+                            </option>
+                        }
+
+                    </select>
+
+                    <input name="QtyBroken"
+                           type="number"
+                           class="form-control mb-2"
+                           required 
+                           style="border: 1px solid black; border-radius: 10px;" />
+
+                    <input name="BrokenBy"
+                           class="form-control mb-2"
+                           value="@Context.Session.GetString("username")" 
+                           style="border: 1px solid black; border-radius: 10px;" />
+
+                    <input name="ReporterRole"
+                           class="form-control mb-2"
+                           value="@Context.Session.GetString("role")" 
+                           style="border: 1px solid black; border-radius: 10px;" />
+
+                    <textarea name="Notes"
+                              class="form-control mb-3"
+                    placeholder="Desciption"
+                              style="border: 1px solid black; border-radius: 10px;"></textarea>
+
+                    <button class="btn btn-secondary">
+                        Send Report
+                    </button>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<div class="row g-4">
+
+    <!-- INVENTORY TABLE -->
+    <div class="col-lg-6">
+        <div class="card inventory-card">
+            <div class="card-body">
+
+                <h4>List Inventory</h4>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Stock</th>
+                            <th>Conditions</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var item in Model.Inventory)
+                        {
+                            <tr>
+
+                                <td>@item.ItemName</td>
+                                <td>@item.Stock @item.Unit</td>
+                                <td>@item.Condition</td>
+
+                                <td>
+
+                                    <!-- EDIT -->
+                                    <button class="btn btn-primary btn-sm btn-action"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#editInventory@(item.InventoryId)">
+                                        Edit
+                                    </button>
+
+
+                                    <!-- DELETE -->
+                                    <form asp-controller="Inventory"
+                                          asp-action="Delete"
+                                          method="post"
+                                          class="d-inline">
+
+                                        <input type="hidden"
+                                               name="id"
+                                               value="@item.InventoryId" />
+
+                                        <input type="hidden"
+                                               name="redirectController"
+                                               value="@ViewContext.RouteData.Values["controller"]" />
+
+                                        <input type="hidden"
+                                               name="redirectAction"
+                                               value="Index" />
+
+                                        <button class="btn btn-danger btn-sm"
+                                                onclick="return confirm('Yakin hapus inventory?')">
+                                            Delete
+                                        </button>
+
+                                    </form>
+
+                                </td>
+
+                            </tr>
+
+
+
+                            <!-- INVENTORY EDIT MODAL -->
+                            <div class="modal fade"
+                                 id="editInventory@(item.InventoryId)"
+                                 tabindex="-1">
+
+                                <div class="modal-dialog">
+
+                                    <div class="modal-content">
+
+                                        <form asp-controller="Inventory"
+                                              asp-action="Edit"
+                                              method="post">
+
+                                            <div class="modal-header">
+                                                <h5>Edit Inventory</h5>
+                                                <button class="btn-close"
+                                                        data-bs-dismiss="modal"></button>
+                                            </div>
+
+                                            <div class="modal-body">
+
+                                                <input type="hidden"
+                                                       name="InventoryId"
+                                                       value="@item.InventoryId" />
+
+                                                <input type="hidden"
+                                                       name="redirectController"
+                                                       value="@ViewContext.RouteData.Values["controller"]" />
+
+                                                <input type="hidden"
+                                                       name="redirectAction"
+                                                       value="Index" />
+
+                                                <input name="ItemName"
+                                                       value="@item.ItemName"
+                                                       class="form-control mb-2" />
+
+                                                <input name="Stock"
+                                                       value="@item.Stock"
+                                                       class="form-control mb-2" />
+
+                                                <input name="Condition"
+                                                       value="@item.Condition"
+                                                       class="form-control" />
+
+                                            </div>
+
+                                            <div class="modal-footer">
+
+                                                <button type="submit"
+                                                        class="btn btn-primary">
+                                                    Save Changes
+                                                </button>
+
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        }
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- BROKEN REPORT TABLE -->
+    <div class="col-lg-6">
+        <div class="card inventory-card">
+            <div class="card-body">
+
+                <h4>History Broken Item</h4>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Qty</th>
+                            <th>Reporter</th>
+                            <th>Description</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var report in Model.BrokenReports)
+                        {
+                            <tr>
+
+                                <td>@report.Inventory?.ItemName</td>
+                                <td>@report.QtyBroken</td>
+                                <td>@report.BrokenBy</td>
+                                <td>@report.Notes</td>
+
+                                <td>
+
+                                    <button class="btn btn-primary btn-sm"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#editBroken@(report.ReportId)">
+                                        Edit
+                                    </button>
+
+
+                                    <form asp-controller="BrokenItem"
+                                          asp-action="Delete"
+                                          method="post"
+                                          class="d-inline">
+
+                                        <input type="hidden"
+                                               name="id"
+                                               value="@report.ReportId" />
+
+                                        <input type="hidden"
+                                               name="redirectController"
+                                               value="@ViewContext.RouteData.Values["controller"]" />
+
+                                        <input type="hidden"
+                                               name="redirectAction"
+                                               value="Index" />
+
+                                        <button class="btn btn-danger btn-sm"
+                                                onclick="return confirm('Are you sure delete report?')">
+                                            Delete
+                                        </button>
+
+                                    </form>
+
+                                </td>
+
+                            </tr>
+
+
+
+                            <!-- BROKEN EDIT MODAL -->
+                            <div class="modal fade"
+                                 id="editBroken@(report.ReportId)"
+                                 tabindex="-1">
+
+                                <div class="modal-dialog">
+
+                                    <div class="modal-content">
+
+                                        <form asp-controller="BrokenItem"
+                                              asp-action="Edit"
+                                              method="post">
+
+                                            <div class="modal-header">
+                                                <h5>Edit Broken Item</h5>
+                                                <button class="btn-close"
+                                                        data-bs-dismiss="modal"></button>
+                                            </div>
+
+                                            <div class="modal-body">
+
+                                                <input type="hidden"
+                                                       name="ReportId"
+                                                       value="@report.ReportId" />
+
+                                                <input type="hidden"
+                                                       name="redirectController"
+                                                       value="@ViewContext.RouteData.Values["controller"]" />
+
+                                                <input type="hidden"
+                                                       name="redirectAction"
+                                                       value="Index" />
+
+                                                <input name="QtyBroken"
+                                                       value="@report.QtyBroken"
+                                                       class="form-control mb-2" />
+
+                                                <input name="BrokenBy"
+                                                       value="@report.BrokenBy"
+                                                       class="form-control mb-2" />
+
+                                                <input name="ReporterRole"
+                                                       value="@report.ReporterRole"
+                                                       class="form-control" />
+
+                                            </div>
+
+                                            <div class="modal-footer">
+
+                                                <button type="submit"
+                                                        class="btn btn-primary">
+                                                    Save Changes
+                                                </button>
+
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        }
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+</div>

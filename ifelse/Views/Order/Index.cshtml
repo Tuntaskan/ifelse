@@ -6,12 +6,7 @@
 @model ifelse.Models.OrderPageViewModel
 @using ifelse.Models
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-</head>
-<body>
-    
+
     @* Main Course: Steak, Biryani Rice, Ramen, Sphagetti *@
     @* Snack: Dimsum, Tea Mini Brownies, Katsu Sandwich, Nigi-nigi *@
     @* Dessert: Mcflurry, Chocolate Cake, Taro Pudding, Dessert Cube *@
@@ -85,7 +80,7 @@
         <div class="container-lg">
             <div class="row">
                 <div class="col-lg-6 pt-5 mt-5">
-                    <h2 class="display-1 ls-1"><span class="fw-bold text-primary">Planarcafea</span>  <span class="fw-bold">Order</span></h2>
+                    <h2 class="display-1 ls-1"><span class="fw-bold text-primary">PLANARCAFEA</span>  <span class="fw-bold">Order</span></h2>
                     <p class="fs-4">Order Page.</p>
                 </div>
             </div>
@@ -102,9 +97,7 @@
 
                         <h2 class="section-title">Main Course</h2>
 
-                        <div class="d-flex align-items-center">
-                            <a href="#" class="btn btn-primary rounded-1">View All</a>
-                        </div>
+                        
                     </div>
 
                 </div>
@@ -125,23 +118,22 @@
                             @(soldOut ? "opacity-50 bg-light" : "")">
 
                                     <!-- Image -->
-                                    <figure>
+                                <figure class="text-center mb-3">
 
-                                        @if (!soldOut)
-                                        {
-                                            <a href="#">
-                                                <img src="images/main1.png"
-                                                     class="tab-image">
-                                            </a>
-                                        }
-                                        else
-                                        {
-                                            <img src="images/main1.png"
-                                                 class="tab-image"
-                                                 style="pointer-events:none;" />
-                                        }
+                                    @if (!string.IsNullOrEmpty(item.Photo))
+                                    {
+                                        <img src="~/images/@item.Photo"
+                                             class="img-fluid tab-image"
+                                             style="height:180px; object-fit:cover;" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/images/no-image.png"
+                                             class="img-fluid tab-image"
+                                             style="height:180px; object-fit:cover;" />
+                                    }
 
-                                    </figure>
+                                </figure>
 
                                     <!-- Content -->
                                     <div class="d-flex flex-column text-center">
@@ -203,7 +195,7 @@
                                             {
                                                 <button class="btn btn-secondary w-100"
                                                         disabled>
-                                                    Stock Habis
+                                                    Stock Empty
                                                 </button>
                                             }
 
@@ -233,9 +225,7 @@
 
                         <h2 class="section-title">Snack</h2>
 
-                        <div class="d-flex align-items-center">
-                            <a href="#" class="btn btn-primary rounded-1">View All</a>
-                        </div>
+                        
                     </div>
 
                 </div>
@@ -256,23 +246,22 @@
                             @(soldOut ? "opacity-50 bg-light" : "")">
 
                                     <!-- Image -->
-                                    <figure>
+                                <figure class="text-center mb-3">
 
-                                        @if (!soldOut)
-                                        {
-                                            <a href="#">
-                                                <img src="images/main1.png"
-                                                     class="tab-image">
-                                            </a>
-                                        }
-                                        else
-                                        {
-                                            <img src="images/main1.png"
-                                                 class="tab-image"
-                                                 style="pointer-events:none;" />
-                                        }
+                                    @if (!string.IsNullOrEmpty(item.Photo))
+                                    {
+                                        <img src="~/images/@item.Photo"
+                                             class="img-fluid tab-image"
+                                             style="height:180px; object-fit:cover;" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/images/no-image.png"
+                                             class="img-fluid tab-image"
+                                             style="height:180px; object-fit:cover;" />
+                                    }
 
-                                    </figure>
+                                </figure>
 
                                     <!-- Content -->
                                     <div class="d-flex flex-column text-center">
@@ -334,7 +323,7 @@
                                             {
                                                 <button class="btn btn-secondary w-100"
                                                         disabled>
-                                                    Stock Habis
+                                                    Stock Empty
                                                 </button>
                                             }
 
@@ -363,9 +352,6 @@
 
                         <h2 class="section-title">Dessert</h2>
 
-                        <div class="d-flex align-items-center">
-                            <a href="#" class="btn btn-primary me-2">View All</a>
-                        </div>
                     </div>
 
                 </div>
@@ -385,23 +371,22 @@
                             @(soldOut ? "opacity-50 bg-light" : "")">
 
                                     <!-- Image -->
-                                    <figure>
+                                <figure class="text-center mb-3">
 
-                                        @if (!soldOut)
-                                        {
-                                            <a href="#">
-                                                <img src="images/dessert4.png"
-                                                     class="tab-image">
-                                            </a>
-                                        }
-                                        else
-                                        {
-                                            <img src="images/dessert4.png"
-                                                 class="tab-image"
-                                                 style="pointer-events:none;" />
-                                        }
+                                    @if (!string.IsNullOrEmpty(item.Photo))
+                                    {
+                                        <img src="~/images/@item.Photo"
+                                             class="img-fluid tab-image"
+                                             style="height:180px; object-fit:cover;" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/images/no-image.png"
+                                             class="img-fluid tab-image"
+                                             style="height:180px; object-fit:cover;" />
+                                    }
 
-                                    </figure>
+                                </figure>
 
                                     <!-- Content -->
                                     <div class="d-flex flex-column text-center">
@@ -492,9 +477,6 @@
 
                         <h2 class="section-title">Drink</h2>
 
-                        <div class="d-flex align-items-center">
-                            <a href="#" class="btn btn-primary me-2">View All</a>
-                        </div>
                     </div>
 
                 </div>
@@ -514,23 +496,22 @@
                             @(soldOut ? "opacity-50 bg-light" : "")">
 
                                     <!-- Image -->
-                                    <figure>
+                                <figure class="text-center mb-3">
 
-                                        @if (!soldOut)
-                                        {
-                                            <a href="#">
-                                                <img src="images/main1.png"
-                                                     class="tab-image">
-                                            </a>
-                                        }
-                                        else
-                                        {
-                                            <img src="images/main1.png"
-                                                 class="tab-image"
-                                                 style="pointer-events:none;" />
-                                        }
+                                    @if (!string.IsNullOrEmpty(item.Photo))
+                                    {
+                                        <img src="~/images/@item.Photo"
+                                             class="img-fluid tab-image"
+                                             style="height:180px; object-fit:cover;" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/images/no-image.png"
+                                             class="img-fluid tab-image"
+                                             style="height:180px; object-fit:cover;" />
+                                    }
 
-                                    </figure>
+                                </figure>
 
                                     <!-- Content -->
                                     <div class="d-flex flex-column text-center">
@@ -592,7 +573,7 @@
                                             {
                                                 <button class="btn btn-secondary w-100"
                                                         disabled>
-                                                    Stock Habis
+                                                    Stock Empty
                                                 </button>
                                             }
 
@@ -612,6 +593,20 @@
         </div>
     </section>
 
+@if (TempData["CartError"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["CartError"]
+    </div>
+}
+
+@if (TempData["CartSuccess"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["CartSuccess"]
+    </div>
+}
+
     <div class="card p-3 mt-5">
 
         <h4>Cart</h4>
@@ -624,37 +619,181 @@
                     @item.MenuName
                     x @item.Qty
                     =
-                    @item.Subtotal
+                    Rp @item.Subtotal.ToString("#,##0").Replace(",", ".")
                 </p>
             }
 
-            <form asp-action="Checkout"
-                  method="post">
+            <hr />
 
-                <input name="customerId"
-                       placeholder="Customer Id"
-                       class="form-control mb-2" />
+            <button type="button"
+                    onclick="openKasirPaymentPopup()"
+                    class="btn btn-primary rounded-1">
+                Checkout
+            </button>
 
-                <input name="tableId"
-                       placeholder="Table Number"
-                       class="form-control mb-2" />
-
-                <button class="button-area p-3 pt-0">
-                    Checkout
+            <form asp-action="ResetCheckout"
+                  method="post"
+                  class="mt-2">
+                <button type="submit"
+                        class="btn btn-outline-secondary rounded-1 w-100">
+                    Reset Checkout
                 </button>
-
             </form>
         }
         else
         {
             <p>Cart kosong</p>
+
+            @if (Model.LastOrder != null)
+            {
+                <form asp-action="ResetCheckout"
+                      method="post"
+                      class="mt-2">
+                    <button type="submit"
+                            class="btn btn-outline-secondary rounded-1 w-100">
+                        Reset Checkout
+                    </button>
+                </form>
+            }
         }
 
     </div>
 
+    <div id="kasirPaymentPopup"
+         style="display:none;
+                position:fixed;
+                top:50%;
+                left:50%;
+                transform:translate(-50%,-50%);
+                background:white;
+                padding:30px;
+                border-radius:12px;
+                z-index:9999;
+                width:400px;">
+
+        <h3>Checkout</h3>
+
+        <form asp-action="Checkout"
+              method="post">
+
+            <input name="customerId"
+                   type="number"
+                   min="1"
+                   placeholder="Customer Id (opsional)"
+                   class="form-control mb-2" />
+
+            <input name="customerName"
+                   placeholder="Nama Customer"
+                   class="form-control mb-2" />
+
+            <input name="customerRequest"
+                   placeholder="Request (opsional)"
+                   class="form-control mb-3" />
+
+            <select name="tableId"
+                    class="form-control mb-3">
+                <option value="0">Pilih Meja</option>
+                @foreach (var meja in Model.Tables)
+                {
+                    var isBooked = meja.Status == "Booked" || meja.Status == "Occupied";
+
+                    if (!isBooked)
+                    {
+                        <option value="@meja.TableId">
+                            Table @meja.TableNumber - @meja.Status
+                        </option>
+                    }
+                }
+            </select>
+
+            <select id="kasirPaymentMethod"
+                    class="form-control mb-3">
+                <option value="Cash">Cash</option>
+                @* <option value="QRIS">QRIS</option> *@
+            </select>
+
+            <div id="kasirQrisSection"
+                 style="display:none; text-align:center; margin-bottom:20px;">
+                <h5>Scan QRIS</h5>
+                <img src="~/images/qris.png"
+                     width="200" />
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary w-100">
+                Confirm Order
+            </button>
+
+            <button type="button"
+                    onclick="closeKasirPaymentPopup()"
+                    class="btn btn-secondary w-100 mt-2">
+                Close
+            </button>
+        </form>
+    </div>
+
+    <div id="kasirReceiptPopup"
+         style="display:none;
+                position:fixed;
+                top:50%;
+                left:50%;
+                transform:translate(-50%,-50%);
+                background:white;
+                padding:30px;
+                border-radius:12px;
+                z-index:9999;
+                width:400px;">
+
+        <h3>Receipt</h3>
+
+        @if (Model.LastOrder != null)
+        {
+            var selectedTable = Model.LastOrder.TableId != null
+                ? Model.Tables.FirstOrDefault(x => x.TableId == Model.LastOrder.TableId.Value)
+                : null;
+
+            <p>Order ID: #@Model.LastOrder.OrderId</p>
+            <p>Name: @Model.LastOrder.CustomerName</p>
+            <p>Date: @Model.LastOrder.OrderDate.ToString("dd MMM yyyy HH:mm")</p>
+
+            @if (selectedTable != null)
+            {
+                <p>Table Number: @selectedTable.TableNumber</p>
+            }
+
+            @foreach (var item in Model.LastOrder.OrderDetails)
+            {
+                <p>
+                    @(item.Menu?.MenuName ?? "Menu")
+                    x @item.Qty
+                    =
+                    Rp @item.Subtotal.ToString("#,##0").Replace(",", ".")
+                </p>
+            }
+
+            <hr />
+            <p>Total: Rp @Model.LastOrder.TotalPrice.ToString("#,##0").Replace(",", ".")</p>
+
+            <form asp-action="ResetCheckout"
+                  method="post"
+                  class="mt-3">
+                <button type="submit"
+                        class="btn btn-outline-secondary w-100 mb-2">
+                    Reset Checkout
+                </button>
+            </form>
+        }
+
+        <button type="button"
+                onclick="closeKasirReceiptPopup()"
+                class="btn btn-primary">
+            Close
+        </button>
+    </div>
+
     <div class="container mt-4">
 
-        <h2>Transaksi Kasir</h2>
+        <h2>Transaction Cashier</h2>
 
         @* <button class="btn btn-primary mb-3"
                 data-bs-toggle="modal"
@@ -662,66 +801,253 @@
             + Transaksi Baru
         </button> *@
 
-        <table class="table table-bordered">
+    <table class="table table-bordered theme-table align-middle fw-bold custom-table">
             <thead>
-                <tr>
-                    <th>Order</th>
-                    <th>Meja</th>
-                    <th>Total</th>
-                    <th>Payment</th>
-                    <th>Status</th>
+                 <tr>
+                     <th>Order</th>
+                     <th>Name</th>
+                     <th>Table</th>
+                     <th>Menu Order</th>
+                     <th>Total</th>
+                     <th>Payment</th>
+                     <th>Status</th>
                     <th>Action</th>
                 </tr>
             </thead>
 
-            <tbody>
-                @foreach (var item in Model.Orders)
-                {
-                    <tr>
-                        <td>@item.OrderId</td>
-                        <td>@item.TableId</td>
-                        <td>@item.TotalPrice</td>
-                        <td>@item.PaymentStatus</td>
-                        <td>@item.OrderStatus</td>
+        <tbody>
+            @foreach (var row in Model.Orders
+                        .OrderBy(x => x.OrderDate)
+                        .Select((order, index) => new { order, index }))
+            {
+                <tr>
+                    <!-- Number -->
+                    <td>
+                        @(row.index + 1)
+                    </td>
 
-                        <td>
+                    <!-- Customer -->
+                    <td>
+                        @(string.IsNullOrWhiteSpace(row.order.CustomerName)
+                                            ? "-"
+                                            : row.order.CustomerName)
+                </td>
+
+                    <!-- Table -->
+                    <td>
+                        @(row.order.TableId?.ToString() ?? "-")
+                    </td>
+
+                    <!-- Menu Order -->
+                    <td>
+                    @if (row.order.OrderDetails.Any())
+                        {
+                            <ul class="mb-0 ps-3">
+                                @foreach (var detail in row.order.OrderDetails)
+                                {
+                                    <li>
+                                        @(detail.Menu?.MenuName ?? $"Menu #{detail.MenuId}") x @detail.Qty
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <span>-</span>
+                        }
+                    </td>
+
+                    <!-- Total -->
+                    <td>
+                        Rp @row.order.TotalPrice.ToString("#,##0").Replace(",", ".")
+                    </td>
+
+                    <!-- Payment -->
+                    <td>
+                        @(row.order.PaymentStatus ?? "-")
+                    </td>
+
+                    <!-- Status -->
+                    <td>
+                        @row.order.OrderStatus
+                    </td>
+
+                    <!-- Action -->
+                    <td>
+                        <div class="d-flex gap-2 flex-wrap">
+
+                            <!-- Receipt -->
                             <button type="button"
-                                    onclick="showReceipt(@item.OrderId)">
+                                    class="btn btn-info btn-sm"
+                                    onclick="showReceipt(@row.order.OrderId)">
                                 Receipt
                             </button>
 
-                            <button class="btn btn-warning btn-sm"
+                            <!-- Update -->
+                            <button class="btn btn-primary btn-sm"
                                     data-bs-toggle="modal"
-                                    data-bs-target="#statusModal-@item.OrderId">
+                                    data-bs-target="#statusModal-@row.order.OrderId">
                                 Update
                             </button>
 
-                            <button class="btn btn-danger btn-sm"
+                            <!-- Delete -->
+                            <button class="btn btn-secondary btn-sm"
                                     data-bs-toggle="modal"
-                                    data-bs-target="#deleteModal-@item.OrderId">
+                                    data-bs-target="#deleteModal-@row.order.OrderId">
                                 Delete
                             </button>
 
-                        </td>
-                    </tr>
+                        </div>
+                    </td>
+                </tr>
 
-                    <partial name="_StatusModal" model="item" />
-                    <partial name="_DeleteModal" model="item" />
-                }
-            </tbody>
+                <!-- Partial Modal -->
+                <partial name="_StatusModal" model="row.order" />
+                <partial name="_DeleteModal" model="row.order" />
+            }
+        </tbody>
         </table>
 
     </div>
 
     <partial name="_CreateModal" />
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+    <div class="modal fade" id="receiptModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content" id="receiptModalContent">
+                <div class="modal-body text-center p-4">Load receipt...</div>
+            </div>
+        </div>
+    </div>
 
     <script src="js/jquery-1.11.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
     <script src="js/plugins.js"></script>
     <script src="js/script.js"></script>
-</body>
-</html>
+
+<script>
+
+    function printReceipt() {
+
+        let content =
+            document.getElementById("printReceipt").innerHTML;
+
+        let original =
+            document.body.innerHTML;
+
+        document.body.innerHTML = content;
+
+        window.print();
+
+        document.body.innerHTML = original;
+
+        location.reload();
+
+    }
+
+</script>
+
+    <script>
+        function openKasirPaymentPopup() {
+            document.getElementById("kasirPaymentPopup").style.display = "block";
+        }
+
+        function closeKasirPaymentPopup() {
+            document.getElementById("kasirPaymentPopup").style.display = "none";
+        }
+
+        function closeKasirReceiptPopup() {
+            document.getElementById("kasirReceiptPopup").style.display = "none";
+        }
+
+        async function showReceipt(orderId) {
+            const modalContent = document.getElementById("receiptModalContent");
+            modalContent.innerHTML = '<div class="modal-body text-center p-4">Load receipt...</div>';
+
+            try {
+                const response = await fetch('@Url.Action("Receipt", "Order")?id=' + orderId);
+
+                if (!response.ok) {
+                    throw new Error("Receipt load failed.");
+                }
+
+                modalContent.innerHTML = await response.text();
+                const receiptModal = new bootstrap.Modal(document.getElementById("receiptModal"));
+                receiptModal.show();
+            } catch (error) {
+                modalContent.innerHTML = '<div class="modal-body text-danger text-center p-4">Receipt gagal dimuat.</div>';
+                const receiptModal = new bootstrap.Modal(document.getElementById("receiptModal"));
+                receiptModal.show();
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const paymentDropdown = document.getElementById("kasirPaymentMethod");
+
+            if (paymentDropdown) {
+                paymentDropdown.addEventListener("change", function () {
+                    const qris = document.getElementById("kasirQrisSection");
+                    qris.style.display = this.value === "QRIS" ? "block" : "none";
+                });
+            }
+
+            @if (Model.LastOrder != null)
+            {
+                <text>
+                    document.getElementById("kasirReceiptPopup").style.display = "block";
+                </text>
+            }
+        });
+    </script>
+
+<style>
+    
+
+    .receipt-paper {
+        width: 280px;
+        margin: auto;
+        padding: 15px;
+        font-family: monospace;
+        font-size: 12px;
+        background: white;
+    }
+
+    .receipt-header {
+        text-align: center;
+    }
+
+    .receipt-item {
+        margin-bottom: 10px;
+    }
+
+    .receipt-total {
+        display: flex;
+        justify-content: space-between;
+        font-weight: bold;
+    }
+
+    .receipt-footer {
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    @@media print {
+
+        body * {
+            visibility: hidden;
+        }
+
+        #printReceipt,
+        #printReceipt * {
+            visibility: visible;
+        }
+
+        #printReceipt {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 58mm;
+        }
+    }
+</style>

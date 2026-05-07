@@ -10,19 +10,19 @@
             <form asp-action="Create" method="post">
 
                 <div class="modal-header">
-                    <h5>Transaksi Baru</h5>
+                    <h5>New Transaction</h5>
                 </div>
 
                 <div class="modal-body">
 
-                    <label>Customer Id</label>
-                    <input name="CustomerId" class="form-control mb-2" />
+                    <label class="fw-bold">Customer Id</label>
+                    <input name="CustomerId" class="form-control mb-2" style="border: 1px solid black; border-radius: 10px;" />
 
-                    <label>Meja</label>
-                    <input name="TableId" class="form-control mb-2" />
+                    <label class="fw-bold">Table</label>
+                    <input name="TableId" class="form-control mb-2" style="border: 1px solid black; border-radius: 10px;" />
 
-                    <label>Menu</label>
-                    <select name="MenuId" class="form-control mb-2">
+                    <label class="fw-bold">Menu</label>
+                    <select name="MenuId" class="form-control mb-2" style="border: 1px solid black; border-radius: 10px;" >
 
                         @if (menus != null)
                         {
@@ -35,11 +35,11 @@
                         }                        
                     </select>
 
-                    <label>Total</label>
-                    <input name="TotalPrice" class="form-control mb-2" />
+                    <label class="fw-bold">Total</label>
+                    <input name="TotalPrice" class="form-control mb-2" style="border: 1px solid black; border-radius: 10px;" />
 
-                    <label>Payment</label>
-                    <select name="PaymentStatus" class="form-control">
+                    <label class="fw-bold">Payment</label>
+                    <select name="PaymentStatus" class="form-control" style="border: 1px solid black; border-radius: 10px;">
                         <option>Paid</option>
                         <option>Unpaid</option>
                     </select>
@@ -49,7 +49,7 @@
                 <div class="modal-footer">
 
                     <button class="btn btn-success">
-                        Simpan
+                        Save
                     </button>
 
                 </div>

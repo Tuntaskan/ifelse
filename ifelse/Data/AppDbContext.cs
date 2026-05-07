@@ -15,5 +15,7 @@ namespace ifelse.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<TableMeja> TablesMeja { get; set; }
+        public DbSet<Inventory> Inventory { get; set; }
+        public DbSet<BrokenItemReport> BrokenItemReports { get; set; }
     }
 }

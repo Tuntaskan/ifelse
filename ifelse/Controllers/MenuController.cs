@@ -26,11 +26,17 @@ namespace ifelse.Controllers
             if (photoFile == null || photoFile.Length == 0)
                 return true;
 
-            var extension = Path.GetExtension(photoFile.FileName);
+            var extension = Path.GetExtension(photoFile.FileName)?.ToLowerInvariant();
 
             if (string.IsNullOrWhiteSpace(extension) || !AllowedPhotoExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase))
             {
-                errorMessage = "Format foto tidak didukung. Gunakan JPG, PNG, GIF, atau WEBP.";
+                errorMessage = "Photo format is not supported. Used JPG, PNG, GIF, or WEBP.";
+                return false;
+            }
+
+            if (photoFile.Length > 5 * 1024 * 1024)
+            {
+                errorMessage = "Photo file max is 5 MB.";
                 return false;
             }
 
@@ -42,14 +48,14 @@ namespace ifelse.Controllers
                 fileName = $"{Guid.NewGuid()}{extension}";
                 var path = Path.Combine(imagesPath, fileName);
 
-                using var stream = new FileStream(path, FileMode.Create);
+                using var stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
                 photoFile.CopyTo(stream);
 
                 return true;
             }
             catch
             {
-                errorMessage = "Foto gagal diupload. Coba ulangi dengan file lain.";
+                errorMessage = "Photo failed to upload.";
                 return false;
             }
         }
@@ -58,7 +64,7 @@ namespace ifelse.Controllers
         {
             var roleId = HttpContext.Session.GetInt32("roleId");
 
-            return roleId == 1 || roleId == 5;
+            return roleId == 1 || roleId == 2;
         }
 
         // READ
@@ -87,6 +93,12 @@ namespace ifelse.Controllers
         {
             if (!IsAllowed())
                 return RedirectToAction("Index", "Home");
+
+            if (string.IsNullOrWhiteSpace(menu.MenuName) || menu.Price < 0 || menu.Stock < 0)
+            {
+                TempData["MenuError"] = "Menu data is not valid.";
+                return RedirectToAction("Index");
+            }
 
             if (!TrySavePhoto(menu.PhotoFile, out var fileName, out var errorMessage))
             {
@@ -123,6 +135,12 @@ namespace ifelse.Controllers
             if (!IsAllowed())
                 return RedirectToAction("Index", "Home");
 
+            if (string.IsNullOrWhiteSpace(menu.MenuName) || menu.Price < 0 || menu.Stock < 0)
+            {
+                TempData["MenuError"] = "Data is not valid.";
+                return RedirectToAction("Index");
+            }
+
             var existingMenu = _context.Menus.Find(menu.MenuId);
 
             if (existingMenu == null)
@@ -140,7 +158,13 @@ namespace ifelse.Controllers
             }
 
             if (!string.IsNullOrEmpty(fileName))
+            {
                 existingMenu.Photo = fileName;
+            }
+            else
+            {
+                existingMenu.Photo = menu.Photo;
+            }
 
             _context.SaveChanges();
 

@@ -15,6 +15,15 @@ namespace ifelse.Controllers
             _context = context;
         }
 
+        private IActionResult RedirectToCheckoutPage()
+        {
+            var roleId = HttpContext.Session.GetInt32("roleId");
+
+            return roleId == 6
+                ? RedirectToAction("Index", "Member")
+                : RedirectToAction("Index", "Home");
+        }
+
         public async Task<IActionResult> Index()
         {
             // hanya customer/member
@@ -58,6 +67,15 @@ namespace ifelse.Controllers
             if (menu == null)
                 return NotFound();
 
+            if (qty <= 0)
+            {
+                TempData["CartError"] =
+                    "Amount of order is not valid.";
+
+                return Redirect(
+                    Request.Headers["Referer"].ToString());
+            }
+
             var cartJson =
                 HttpContext.Session.GetString("Cart");
 
@@ -68,6 +86,18 @@ namespace ifelse.Controllers
 
             var existingItem = cart
                 .FirstOrDefault(x => x.MenuId == menuId);
+
+            int totalQty =
+                qty;
+
+            if (totalQty > menu.Stock)
+            {
+                TempData["CartError"] =
+                    $"Stock {menu.MenuName} only left {menu.Stock}.";
+
+                return Redirect(
+                    Request.Headers["Referer"].ToString());
+            }
 
             if (existingItem != null)
             {
@@ -96,25 +126,46 @@ namespace ifelse.Controllers
         public async Task<IActionResult> Checkout(
             string customerName,
             string? customerRequest,
-            int? tableId)
+            int? tableId,
+            DateTime? reservationDate)
         {
             var roleId = HttpContext.Session.GetInt32("roleId");
-
-            if (roleId != 6)
-            {
-                return RedirectToAction("Index", "Home");
-            }
 
             var username =
                 HttpContext.Session.GetString("username");
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(x =>
-                    x.Username == username);
+            var user = string.IsNullOrWhiteSpace(username)
+                ? null
+                : await _context.Users
+                    .FirstOrDefaultAsync(x =>
+                        x.Username == username);
 
-            if (user == null)
+            var isMember = roleId == 6 && user?.IsMember == true;
+
+            if (tableId == 0)
             {
-                return RedirectToAction("Index", "Home");
+                tableId = null;
+            }
+
+            // kalau member booking future date
+            if (isMember &&
+                reservationDate != null &&
+                reservationDate.Value.Date < DateTime.Today)
+            {
+                TempData["CartError"] =
+                    "Reservation date is not valid.";
+
+                return RedirectToCheckoutPage();
+            }
+
+            // non-member wajib isi nama
+            if (!isMember &&
+                string.IsNullOrWhiteSpace(customerName))
+            {
+                TempData["CartError"] =
+                    "Customer name must be fill.";
+
+                return RedirectToAction("Index");
             }
 
             var cartJson =
@@ -127,27 +178,55 @@ namespace ifelse.Controllers
 
             var cart = string.IsNullOrEmpty(cartJson) ? new List<CartItem>() : JsonSerializer.Deserialize<List<CartItem>>(cartJson) ?? new List<CartItem>();
 
+            // VALIDASI STOCK ULANG
+            foreach (var item in cart)
+            {
+                var menu = await _context.Menus
+                    .FindAsync(item.MenuId);
+
+                if (menu == null)
+                {
+                    TempData["CartError"] =
+                        "Menu is not found.";
+
+                    return Redirect(
+                        Request.Headers["Referer"].ToString());
+                }
+
+                if (item.Qty > menu.Stock)
+                {
+                    TempData["CartError"] =
+                        $"{menu.MenuName} only left {menu.Stock}.";
+
+                    return Redirect(
+                        Request.Headers["Referer"].ToString());
+                }
+            }
+
             // diskon member
             decimal totalPrice =
                 cart.Sum(x => x.Subtotal);
 
-            if (user.IsMember == true)
+            if (isMember)
             {
                 // contoh diskon 10%
                 totalPrice =
                     totalPrice * 0.9m;
             }
 
+            var orderDate = isMember && reservationDate != null
+                ? reservationDate.Value
+                : DateTime.Now;
+
             var order = new Order
             {
-                CustomerId = user.UserId,
-                CustomerName =
-                roleId == 6
-                    ? user.FullName
+                CustomerId = user?.UserId,
+                CustomerName = isMember
+                    ? user!.FullName
                     : customerName,
                 CustomerRequest = customerRequest,
                 TableId = tableId == 0 ? null : tableId,
-                OrderDate = DateTime.Now,
+                OrderDate = orderDate,
                 // nanti kasir yang handle
                 PaymentStatus = "Pending",
                 // kasir akan lihat ini
@@ -159,7 +238,7 @@ namespace ifelse.Controllers
 
             await _context.SaveChangesAsync();
 
-            if (tableId != null)
+            if (isMember && tableId != null)
             {
                 var selectedTable =
                     await _context.TablesMeja
@@ -200,10 +279,19 @@ namespace ifelse.Controllers
             await _context.SaveChangesAsync();
 
             HttpContext.Session.SetInt32("LastOrderId", order.OrderId);
-            // kosongkan cart
             HttpContext.Session.Remove("Cart");
+            TempData["ShowReceipt"] = true;
 
-            return RedirectToAction("Receipt", new { id = order.OrderId });
+            return RedirectToCheckoutPage();
+        }
+
+        [HttpPost]
+        public IActionResult ResetCheckout()
+        {
+            HttpContext.Session.Remove("Cart");
+            HttpContext.Session.Remove("LastOrderId");
+
+            return RedirectToCheckoutPage();
         }
 
         public async Task<IActionResult> Receipt(int id)

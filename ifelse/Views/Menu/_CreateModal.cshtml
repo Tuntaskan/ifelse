@@ -10,42 +10,58 @@
                   enctype="multipart/form-data">
 
                 <div class="modal-header">
-                    <h5>Tambah Menu</h5>
+                    <h5>Add Menu</h5>
                 </div>
 
                 <div class="modal-body">
 
                     <div class="mb-2">
-                        <label>Foto Menu</label>
+                        <label class="fw-bold">Menu Photo</label>
                         <input asp-for="PhotoFile"
                                type="file"
-                               class="form-control" />
+                               class="form-control" 
+                               style="border: 1px solid black; border-radius: 10px;" />
                     </div>
 
+                    <label class="fw-bold">Menu Name</label>
                     <input asp-for="MenuName"
-                           class="form-control mb-2"
-                           placeholder="Nama Menu" />
+                           class="form-control mb-2" 
+                           style="border: 1px solid black; border-radius: 10px;"
+                           placeholder="Menu Name" />
 
+                    <label class="fw-bold">Category</label>
                     <select asp-for="CategoryId"
                             class="form-control mb-2"
+                            style="border: 1px solid black; border-radius: 10px;"
                             asp-items="Html.GetEnumSelectList<ifelse.Models.MenuCategory>()">
                     </select>
 
+                    <label class="fw-bold">Price</label>
                     <input asp-for="Price"
                            class="form-control mb-2"
+                           style="border: 1px solid black; border-radius: 10px;"
                            placeholder="Harga" />
 
-                    <div>
-                        <input asp-for="Status" />
-                        Tersedia
+                    <div class="mb-2">
+                        <label class="fw-bold">Stock</label>
+                        <input asp-for="Stock"
+                               type="number"
+                               min="0"
+                               class="form-control"
+                               style="border: 1px solid black; border-radius: 10px;"
+                               placeholder="Stock" />
                     </div>
 
                 </div>
 
                 <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-secondary" onclick="closeCreateModal()">
+                        Close
+                    </button>
                     <button type="submit"
-                            class="btn btn-success">
-                        Simpan
+                            class="btn btn-primary">
+                        Save
                     </button>
                 </div>
 

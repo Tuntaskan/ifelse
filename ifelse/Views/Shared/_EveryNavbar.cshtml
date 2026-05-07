@@ -7,17 +7,19 @@
 
 </div>
 
-<header>
+<header class="custom-navbar border-bottom shadow-sm">
     <div class="container-fluid">
         <div class="row py-3 border-bottom">
 
             <div class="col-sm-4 col-lg-2 text-center text-sm-start d-flex gap-3 justify-content-center justify-content-md-start">
                 <div class="d-flex align-items-center my-3 my-sm-0">
-                        <img src="images/logo.svg" alt="logo" class="img-fluid">
+                    <a>
+                        <img src="~/images/planarcafea!.png" alt="logo" class="img-fluid">
+                    </a>
                 </div>
             </div>
 
-            <div class="col-lg-4">
+            <div class="col-lg-4 col-lg-2 d-flex gap-5 align-items-center justify-content-center justify-content-sm-end">
                 <ul class="navbar-nav list-unstyled d-flex flex-row gap-3 gap-lg-5 justify-content-center flex-wrap align-items-center mb-0 fw-bold text-uppercase text-dark">
                     <li class="nav-item dropdown">
 
@@ -56,15 +58,63 @@
                                         <a asp-controller="Menu"
                                            asp-action="Index"
                                            class="dropdown-item">
-                                            Kelola Menu
+                                            Manage Menu
+                                        </a>
+                                    </li>
+
+                                 <li>
+                                     <a asp-controller="Order"
+                                        asp-action="Index"
+                                        class="dropdown-item">
+                                         Manage Order
+                                     </a>
+                                 </li>
+
+                                 <li>
+                                     <a asp-controller="TablesMeja"
+                                        asp-action="Index"
+                                        class="dropdown-item">
+                                         Manage Table
+                                     </a>
+                                 </li>
+
+                                    <li>
+                                        <a asp-controller="Admin"
+                                           asp-action="CreateUser"
+                                           class="dropdown-item">
+                                            Create User
+                                        </a>
+                                    </li>
+
+                                 break;
+
+
+                                // SUPERVISOR
+                                case 2:
+
+                                    <li><hr class="dropdown-divider"></li>
+
+                                    <li>
+                                        <a asp-controller="Supervisor"
+                                           asp-action="Index"
+                                           class="dropdown-item">
+                                            Dashboard
                                         </a>
                                     </li>
 
                                     <li>
-                                        <a asp-controller="Order"
+                                        <a asp-controller="TablesMeja"
                                            asp-action="Index"
                                            class="dropdown-item">
-                                            Kelola Order
+                                            Manage Table
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a asp-controller="Menu"
+                                           asp-action="Index"
+                                           class="dropdown-item">
+                                            Manage Menu
                                         </a>
                                     </li>
 
@@ -88,7 +138,7 @@
                                         <a asp-controller="Order"
                                            asp-action="Index"
                                            class="dropdown-item">
-                                            Kelola Order
+                                            Manage Order
                                         </a>
                                     </li>
 
@@ -108,13 +158,40 @@
                                         </a>
                                     </li>
 
+                                    
+
+                                    break;
+
+
+                                // KITCHEN
+                                case 4:
+
+                                    <li><hr class="dropdown-divider"></li>
+
                                     <li>
-                                        <a asp-controller="Menu"
+                                        <a asp-controller="Kitchen"
                                            asp-action="Index"
                                            class="dropdown-item">
-                                            Kelola Menu
+                                            Dashboard
                                         </a>
                                     </li>
+
+                                    break;
+
+
+                                case 6:
+
+                                    <li><hr class="dropdown-divider"></li>
+
+                                    <li>
+                                        <a asp-controller="Member"
+                                           asp-action="Index"
+                                           class="dropdown-item">
+                                            Dashboard
+                                        </a>
+                                    </li>
+
+
 
                                     break;
                             }
@@ -130,11 +207,16 @@
                     <li>
                         <a asp-controller="Login" asp-action="Logout" class="btn btn-primary rounded-1">Logout</a>
                     </li>
-                    <li>
-                        <a class="p-2 mx-1">
-                            <svg width="24" height="24"><use xlink:href="#user"></use></svg>
-                        </a>
-                    </li>
+                    @if (roleId == 6)
+                    {
+                        <li>
+                            <a asp-controller="Member" asp-action="Profile" class="p-2 mx-1">
+                                <svg width="24" height="24">
+                                    <use xlink:href="#user"></use>
+                                </svg>
+                            </a>
+                        </li>
+                    }
                 </ul>
             </div>
 

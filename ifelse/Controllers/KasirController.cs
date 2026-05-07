@@ -10,7 +10,7 @@ namespace ifelse.Controllers
 
             if (roleId != 3)
             {
-                return RedirectToAction("Index", "Login");
+                return RedirectToAction("Index", "Home");
             }
 
             ViewBag.Username = HttpContext.Session.GetString("username");
