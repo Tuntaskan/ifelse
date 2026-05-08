@@ -32,7 +32,7 @@ namespace ifelse.Controllers
                 Orders = _context.Orders
                 .Include(x => x.OrderDetails)
                 .ThenInclude(x => x.Menu)
-                .Where(x => x.OrderStatus != "Done" && x.PaymentStatus == "Paid")
+                .Where(x => x.PaymentStatus == "Paid")
                 .OrderBy(x => x.OrderDate)
                 .ToList()
             };
